@@ -1,0 +1,1 @@
+import{g as e,e as s}from"./index-d3dc8ec6.js";function l(t){return s("MuiListItemText",t)}const i=e("MuiListItemText",["root","multiline","dense","inset","primary","secondary"]),n=i;export{l as g,n as l};

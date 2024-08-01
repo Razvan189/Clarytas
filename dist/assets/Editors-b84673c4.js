@@ -1,0 +1,10 @@
+import{j as e}from"./index-d3dc8ec6.js";import{R as r}from"./index-e7e0cd66.js";import"./httpClient-458ee8d8.js";import{P as m}from"./PageBreadCrumb-4724c852.js";import{C as l}from"./ComponentContainerCard-ada72cf6.js";/* empty css                   *//* empty css                     */import{B as t}from"./Box-34926251.js";import"./assertThisInitialized-081f9914.js";import"./OutlinedInput-569485e6.js";import"./InputBase-0890acc9.js";import"./PageMetaData-9cc0daf9.js";import"./index.esm-f102f759.js";import"./Typography-92458322.js";import"./createSvgIcon-526ad4b9.js";import"./ButtonBase-27728b09.js";import"./TransitionGroupContext-50cf2de2.js";import"./useSlotProps-ef556448.js";import"./mergeSlotProps-792837f7.js";import"./Card-e7d212e6.js";import"./Paper-66d9b1bc.js";import"./CardContent-e59f288f.js";import"./Stack-431ac2e3.js";import"./styled-5f6f3a21.js";const N=()=>{let i="",o="";o=i=`<h3><span className="ql-size-large">Hello World!</span></h3>
+  <br/>
+  <h3>This is an simple editable area.</h3>
+  <p><br/></p>
+  <ul>
+    <li>Select a text to reveal the toolbar.</li>
+    <li>Edit rich document on-the-fly, so elastic!</li>
+  </ul>
+  <p><br/></p>
+  <p>End of simple area</p>`;const s={toolbar:[[{font:[]},{size:[]}],["bold","italic","underline","strike"],[{color:[]},{background:[]}],[{script:"super"},{script:"sub"}],[{header:[!1,1,2,3,4,5,6]},"blockquote","code-block"],[{list:"ordered"},{list:"bullet"},{indent:"-1"},{indent:"+1"}],["direction",{align:[]}],["link","image","video"],["clean"]]};return e.jsxs(e.Fragment,{children:[e.jsx(m,{title:"Editors",subName:"Forms"}),e.jsxs(t,{sx:{display:"flex",flexDirection:"column",gap:"24px"},children:[e.jsx(l,{title:"Snow Editor",children:e.jsx(t,{mt:"20px",width:"100%",children:e.jsx(r,{modules:s,defaultValue:o,theme:"snow"})})}),e.jsx(l,{title:"Bubble Editor",sx:{overflow:"visible"},children:e.jsx(t,{mt:"20px",width:"100%",sx:{border:"1px solid #CCCCCC"},children:e.jsx(r,{defaultValue:i,theme:"bubble",style:{height:300}})})})]})]})};export{N as default};

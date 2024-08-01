@@ -1,0 +1,1 @@
+import{r as e}from"./index-d3dc8ec6.js";const r=(a=!1)=>{const[s,t]=e.useState(a),o=e.useCallback(()=>t(!0),[]),l=e.useCallback(()=>t(!1),[]),c=e.useCallback(()=>t(!s),[s]);return{isOpen:s,toggleOpen:c,show:o,hide:l}};export{r as u};

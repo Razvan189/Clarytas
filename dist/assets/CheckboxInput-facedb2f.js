@@ -1,0 +1,1 @@
+import{j as o}from"./index-d3dc8ec6.js";import{C as n}from"./yup-ca1bcb37.js";import{F as p}from"./FormControlLabel-a8d49926.js";import{M as a}from"./Checkbox-fcb7099f.js";const b=({control:t,id:s,name:r,label:e,labelSx:m,...x})=>o.jsx(n,{control:t,render:({field:i,fieldState:l})=>o.jsx(p,{control:o.jsx(a,{id:s??r,...x,...i}),sx:m,label:e}),name:r});export{b as C};
