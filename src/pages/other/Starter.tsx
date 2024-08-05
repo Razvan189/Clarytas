@@ -49,7 +49,7 @@ export const Starter = () => {
     }, [query]);
     const fetchData = (name: string) => {
         try {
-            fetch(`https://api.clarytas.online/search?schema=${value}&search_text=${name}&filters=[${array}]&api_key=993fffa7-172b-411d-8267-b3d512343a92`, {
+            fetch(`https://api.clarytas.online/search?schema=${value}&search_text=${name}&filters=[${array}]&api_key=e10bbee5-b8b0-4d4f-bea7-8aba7eed5cef`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"

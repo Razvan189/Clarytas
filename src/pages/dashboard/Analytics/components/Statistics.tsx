@@ -13,6 +13,8 @@ import {
   SwipeableDrawer, Tab,
   Typography
 } from "@mui/material";
+import DialogContent from '@mui/material/DialogContent';
+import Dialog from '@mui/material/Dialog';
 import { useEffect, useState} from "react";
 import Link from '@mui/material/Link';
 import { useLocation, useNavigate} from "react-router-dom";
@@ -22,20 +24,28 @@ import SearchIcon from "@mui/icons-material/Search";
 import ErrorNotFound from "@src/pages/error/ErrorNotFound.tsx";
 import {TabContext, TabList, TabPanel} from "@mui/lab";
 import { styled, css } from '@mui/system';
-import {LuDownload, LuMail, LuPrinter} from "react-icons/lu";
+import {LuDownload, LuKeyboard, LuMail, LuPrinter, LuX} from "react-icons/lu";
 import {Plus} from "lucide-react";
 import { Page, Text, View, Document, StyleSheet, PDFViewer  } from '@react-pdf/renderer';
 
 
 
 
+
 const Statistics = () => {
+  type Country = {
+    US: "us_de"
+    NO: "no",
+    GER: "ger",
+    FR: "fr"
+  }
   const navigate = useNavigate();
   const { state } = useLocation();
   const [currentView, setView] = useState('profile');
   if (!state) {
     return <ErrorNotFound/>
   }
+
 
   const grey = {
     50: '#F3F6F9',
@@ -86,6 +96,8 @@ const Statistics = () => {
   );
 
   const [companyData, setCompanyData] = useState(state.data.oc);
+
+  console.log(companyData)
   const [negativeNews, setNegativeNews] = useState(state.data.gc);
   const [openSanctions, setOpenSanctions] = useState(state.data.os);
 
@@ -93,8 +105,6 @@ const Statistics = () => {
   const [currenOsPage, setCurrentOsPage] = useState(1);
   const [value, setValue] = useState('company');
   const [query, setQuery] = useState("");
-  const currentNegativeNews = negativeNews[currentNgPage - 1];
-  const currentOpenSanction = openSanctions[currenOsPage - 1];
 
   const [count, setCount] = useState(0);
   const [report, setReport] = useState('company');
@@ -134,7 +144,7 @@ const Statistics = () => {
 
   const fetchData = (name: string) => {
     try {
-      fetch(`https://api.clarytas.online/search?schema=${value}&search_text=${name}&api_key=993fffa7-172b-411d-8267-b3d512343a92`, {
+      fetch(`https://api.clarytas.online/search?schema=${value}&search_text=${name}&api_key=8c684101-29be-4b90-96f9-414c12e998f4`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json"
@@ -162,7 +172,7 @@ const Statistics = () => {
 
   const addReport = (name: string) => {
     try {
-      fetch(`https://api.clarytas.online/report?schema=${value}&search_text=${name}&api_key=993fffa7-172b-411d-8267-b3d512343a92`, {
+      fetch(`https://api.clarytas.online/report?schema=${value}&search_text=${name}&api_key=a1e3b546-77ac-4eed-96c8-5c3b9aa076ef`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json"
@@ -179,30 +189,37 @@ const Statistics = () => {
     }
   }
 
+  const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    '& .MuiDialogContent-root': {
+      padding: theme.spacing(2),
+
+    },
+    '& .MuiDialogActions-root': {
+      padding: theme.spacing(1),
+      position: 'relative',
+      flexDirection: 'column',
+      gap: "8px",
+      display: "flex",
+      float:'right',
+      textAlign: "start",
+      fontFamily: "'IBM Plex Sans', sans-serif"
+    },
+  }));
+
   const handleChange = (event) => {
     setQuery(event.target.value)
   }
-
-  const MyDocument = () => (
-        <Document title="Report">
-          <Page size="A4" style={styles.page}>
-            <View style={styles.section}>
-              <Text>{report}</Text>
-            </View>
-          </Page>
-        </Document>
-  );
-
 
 
   useEffect(() => {
   }, [query]);
 
   const searchClick = () => {
+    console.log(query)
     fetchData(query);
   }
 
-    return (
+  return (
         <>
           <PageBreadcrumb title="Statistics" subName="Home" path={"/pages/Starter"}/>
           <Sidebar rootStyles={{
@@ -331,6 +348,20 @@ const Statistics = () => {
               </Paper>
             </TabPanel>
           </TabContext>
+              <PDFViewer style={{justifyContent: "center", display: 'flex', position: 'absolute', height: "100%", left: "20%", zIndex: 30, width: "70%",  display: `${openDocument ? 'block' : 'none'}`}}>
+                <Document title="tesla">
+                  <Page size="A4" style={styles.page}>
+                    <View style={styles.section}>
+                      <Text>{report}</Text>
+                    </View>
+                  </Page>
+                </Document>
+              </PDFViewer>
+          <IconButton
+              onClick={() => setOpenDocument(false)}
+              sx={{color: "white", paddingInlineStart:0, justifyContent: "center", alignItems: "center", display: 'flex', position: 'absolute', left: "80%", zIndex: 30, display: `${openDocument ? 'block' : 'none'}`}}>
+            <LuX />
+          </IconButton>
           <Grid container xs={8}
                 sx={{justifyContent: "center", display: 'flex', position: "absolute", left: "40%", top: "13%"}}>
             <Badge badgeContent={count} color="primary">
@@ -340,11 +371,9 @@ const Statistics = () => {
               </Button>
             </Badge>
           </Grid>
-          <PDFViewer  style={{justifyContent: "center", display: 'flex', position: 'absolute', height: "100%", left: "20%", zIndex: 30, width: "70%",  display: `${openDocument ? 'block' : 'none'}`}}>
-            <MyDocument />
-          </PDFViewer>
-          <Grid container xs={8}
-                sx={{justifyContent: "center", display: 'flex', position: "aabsolute", left: "20%", top: "15%"}}>
+
+          <Grid container xs={6}
+                sx={{justifyContent: "center", display: 'flex', position: "absolute", left: "20%", top: "13%"}}>
             <LuDownload style={{cursor: "pointer", zIndex: 4, width: 100, height: 25}}/>
             <LuPrinter style={{cursor: "pointer", zIndex: 4, width: 100, height: 25}}/>
             <LuMail style={{cursor: "pointer", zIndex: 4, width: 100, height: 25}}/>
@@ -381,31 +410,137 @@ const Statistics = () => {
                                     className="project-card card p-0 border-5 border-dark shadow-lg">
                               <Plus style={{marginRight: "6px"}}/> Add to Report
                             </Button>
-                            <Modal
-                                aria-labelledby="unstyled-modal-title"
-                                aria-describedby="unstyled-modal-description"
+                            <BootstrapDialog
+                                aria-labelledby="customized-dialog-title"
                                 open={open === index}
                                 onClose={handleClose}
                             >
-                              <ModalContent sx={{width: 1000, height: 1000}}>
+                              <DialogContent dividers sx={{width: "800px", maxWidth: "1000px"}}>
+                                <h1 style={{
+                                  textAlign: "center",
+                                  alignItems: "center",
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  top: "0"
+                                }}>
+                                  {item.name}
+                                </h1>
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  {item.name.toUpperCase()}
+                                </Typography>
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  {item.company_number}
+                                </Typography>
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  {item.registered_address_in_full ? item.registered_address_in_full.toUpperCase() : ""}
+                                </Typography>
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  {item.registered_address ? item.registered_address.country.toUpperCase() : ""}
+                                </Typography>
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  {item.jurisdiction_code.name}
+                                </Typography>
+                                <h2 style={{
+                                  textAlign: "left",
+                                  display: "flex",
+                                  justifyContent: "left",
+                                  top: "0"
+                                }}>
+                                  Communications
+                                </h2>
+                                <Divider sx={{
+                                  borderWidth: "3px",
+                                  borderColor: "black",
+                                  borderRadius: "30px",
+                                  marginTop: "-20px"
+                                }}/>
                                 <Typography
                                     display={"flex"}
                                     fontWeight={600}
-                                    color={"grey.600"}
-                                    component={"p"}
-                                    marginBottom={"12px"}>
-                                  Registration number :
+                                    color={"black.600"}
+                                    marginTop={"10px"}
+                                >
+                                  Website:
                                   <Typography marginLeft={"8px"} variant="body1">
-                                    {item.company_number}
+                                    <Link href={item.source.url} variant="body2">
+                                      {item.opencorporates_url}
+                                    </Link>
+                                  </Typography>
+                                </Typography>
+                                <h2 style={{
+                                  textAlign: "left",
+                                  display: "flex",
+                                  justifyContent: "left",
+                                  top: "0"
+                                }}>
+                                  Company Identifiers
+                                </h2>
+                                <Divider sx={{
+                                  borderWidth: "3px",
+                                  borderColor: "black",
+                                  borderRadius: "30px",
+                                  marginTop: "-20px"
+                                }}/>
+                                <Typography
+                                    display={"flex"}
+                                    fontWeight={600}
+                                    color={"black.600"}
+                                    marginTop={"10px"}
+                                >
+                                  Ticker:
+                                  <Typography marginLeft={"8px"} variant="body1">
+                                    {item.name}
                                   </Typography>
                                 </Typography>
                                 <Typography
                                     display={"flex"}
                                     fontWeight={600}
-                                    color={"grey.600"}
-                                    component={"p"}
-                                    marginBottom={"12px"}>
-                                  Date of incorporation :
+                                    color={"black.600"}
+                                >
+                                  IRS No:
+                                </Typography>
+                                <Typography
+                                    display={"flex"}
+                                    fontWeight={600}
+                                    color={"black.600"}
+                                >
+                                  CIK:
+                                </Typography>
+                                <Typography
+                                    display={"flex"}
+                                    fontWeight={600}
+                                    color={"black.600"}
+                                >
+                                  Reuters Instrument Code:
+                                </Typography>
+                                <Typography
+                                    display={"flex"}
+                                    fontWeight={600}
+                                    color={"black.600"}
+                                >
+                                  Display RIC:
+                                </Typography>
+                                <h2 style={{
+                                  textAlign: "left",
+                                  display: "flex",
+                                  justifyContent: "left",
+                                  top: "0"
+                                }}>
+                                  Company Information
+                                </h2>
+                                <Divider sx={{
+                                  borderWidth: "3px",
+                                  borderColor: "black",
+                                  borderRadius: "30px",
+                                  marginTop: "-20px"
+                                }}/>
+                                <Typography
+                                    display={"flex"}
+                                    fontWeight={600}
+                                    color={"black.600"}
+                                    marginTop={"10px"}
+                                >
+                                  Incorporation Date:
                                   <Typography marginLeft={"8px"} variant="body1">
                                     {item.incorporation_date}
                                   </Typography>
@@ -413,46 +548,157 @@ const Statistics = () => {
                                 <Typography
                                     display={"flex"}
                                     fontWeight={600}
-                                    color={"grey.600"}
-                                    component={"p"}
-                                    marginBottom={"12px"}>
-                                  Status :
-                                  {item.current_status &&
-                                      <Typography marginLeft={"8px"} variant="body1">
-                                        {item.inactive ? "Active" : "Inactive"}
-                                      </Typography>
-                                  }
+                                    color={"black.600"}
+                                >
+                                  Place Of Incorporation/Registration:
+                                  <Typography marginLeft={"8px"} variant="body1">
+                                    {item.registered_address ? item.registered_address.region : ""}
+                                  </Typography>
                                 </Typography>
                                 <Typography
                                     display={"flex"}
                                     fontWeight={600}
-                                    color={"grey.600"}
-                                    component={"p"}
-                                    marginBottom={"12px"}>
-                                  Jurisdiction :
-                                  {item.jurisdiction_code &&
-                                      <Typography marginLeft={"8px"} variant="body1">
-                                        {item.jurisdiction_code}
-                                      </Typography>
-                                  }
+                                    color={"black.600"}
+                                >
+                                  Legal Status:
+
                                 </Typography>
                                 <Typography
                                     display={"flex"}
                                     fontWeight={600}
-                                    color={"grey.600"}
-                                    component={"p"}
-                                    marginBottom={"12px"}>
-                                  Source :
-                                  {item.source &&
-                                      <Typography marginLeft={"8px"} variant="body1">
-                                        <Link href={item.source.url} variant="body2">
-                                          {item.source.publisher}
-                                        </Link>
-                                      </Typography>
-                                  }
+                                    color={"black.600"}
+                                >
+                                  Operating Status:
+                                  <Typography marginLeft={"8px"} variant="body1">
+                                    {item.current_status ? item.current_status : ""}
+                                  </Typography>
                                 </Typography>
-                              </ModalContent>
-                            </Modal>
+                                <Typography
+                                    display={"flex"}
+                                    fontWeight={600}
+                                    color={"black.600"}
+                                >
+                                  Employees:
+                                  <Typography marginLeft={"8px"} variant="body1">
+                                    {item.current_status ? item.current_status : ""}
+                                  </Typography>
+                                </Typography>
+                                <h2 style={{
+                                  textAlign: "left",
+                                  display: "flex",
+                                  justifyContent: "left",
+                                  top: "0"
+                                }}>
+                                  Description
+                                </h2>
+                                <Divider sx={{
+                                  borderWidth: "3px",
+                                  borderColor: "black",
+                                  borderRadius: "30px",
+                                  marginTop: "-20px"
+                                }}/>
+                                <Typography
+                                    display={"flex"}
+                                    fontWeight={600}
+                                    color={"black.600"}
+                                    marginTop={"10px"}
+                                >
+                                  Company type:
+                                  <Typography marginLeft={"8px"} variant="body1">
+                                    {item.company_type ? item.company_type : ""}
+                                  </Typography>
+                                </Typography>
+                                <h2 style={{
+                                  textAlign: "left",
+                                  display: "flex",
+                                  justifyContent: "left",
+                                  top: "0"
+                                }}>
+                                  Market and Industry
+                                </h2>
+                                <Divider sx={{
+                                  borderWidth: "3px",
+                                  borderColor: "black",
+                                  borderRadius: "30px",
+                                  marginTop: "-20px"
+                                }}/>
+                                <Typography
+                                    display={"flex"}
+                                    fontWeight={600}
+                                    color={"black.600"}
+                                    marginTop={"10px"}
+                                >
+                                  NAICS Codes:
+                                  <Typography marginLeft={"8px"} variant="body1">
+                                    33660
+                                  </Typography>
+                                </Typography>
+                                <Typography
+                                    display={"flex"}
+                                    fontWeight={600}
+                                    color={"black.600"}
+                                >
+                                  SIC Codes:
+                                  <Typography marginLeft={"8px"} variant="body1">
+                                    3711
+                                  </Typography>
+                                </Typography>
+                                <h2 style={{
+                                  textAlign: "left",
+                                  display: "flex",
+                                  justifyContent: "left",
+                                  top: "0"
+                                }}>
+                                  Financials
+                                </h2>
+                                <Divider sx={{
+                                  borderWidth: "3px",
+                                  borderColor: "black",
+                                  borderRadius: "30px",
+                                  marginTop: "-20px"
+                                }}/>
+                                <h2 style={{
+                                  textAlign: "left",
+                                  display: "flex",
+                                  justifyContent: "left",
+                                  top: "0"
+                                }}>
+                                  Income Statement
+                                </h2>
+                                <Divider sx={{
+                                  borderWidth: "3px",
+                                  borderColor: "black",
+                                  borderRadius: "30px",
+                                  marginTop: "-20px"
+                                }}/>
+                                <h2 style={{
+                                  textAlign: "left",
+                                  display: "flex",
+                                  justifyContent: "left",
+                                  top: "0"
+                                }}>
+                                  Classification
+                                </h2>
+                                <Divider sx={{
+                                  borderWidth: "3px",
+                                  borderColor: "black",
+                                  borderRadius: "30px",
+                                  marginTop: "-20px"
+                                }}/>
+                                <Typography
+                                    display={"flex"}
+                                    fontWeight={600}
+                                    color={"black.600"}
+                                    marginTop={"10px"}
+                                >
+                                  Company:
+                                  <Typography marginLeft={"8px"} variant="body1">
+                                    {item.name}
+                                  </Typography>
+                                </Typography>
+                              </DialogContent>
+
+                            </BootstrapDialog>
                           </Box>
                         </CardContent>
                       </Card>
@@ -466,17 +712,37 @@ const Statistics = () => {
               </Box>
           ))}
 
-          {currentView === 'news' && currentNegativeNews &&
-              <Box>
-                <Grid container spacing={0} sx={{direction: "column", justifyContent: "center", width: "100%"}}>
-                  <Grid item xs={4}>
-                    <Grid item>
+          {currentView === 'news' && negativeNews.map((item, index) => (
+              <Box sx={{flexGrow: 1}}>
+                <Grid container spacing={3} sx={{
+                  justifyContent: "center",
+                  marginTop: 0,
+                  display: 'flex',
+                  position: "relative",
+                  left: 0,
+                  top: 0
+                }}>
+                  <Grid item xs={6}>
+                  <Grid item>
                       <Card sx={{textAlign: "center"}}>
                         <CardContent sx={{padding: "48px"}}>
                           <Box
                               marginTop={"24px"}>
-                            {currentNegativeNews.title}
+                            {item.title}
                           </Box>
+                          <Button sx={{position: "absolute", zIndex: 3, left: "60%", top: "50%"}}
+                                  onClick={() => handleOpen(index)}
+                                  className="project-card card p-0 border-5 border-dark shadow-lg">
+                            Preview
+                          </Button>
+                          <Modal
+                              aria-labelledby="unstyled-modal-title"
+                              aria-describedby="unstyled-modal-description"
+                              open={open === index}
+                              onClose={handleClose}
+                              disableScrollLock
+                          >
+                            <ModalContent sx={{width: 1000, height: 1000}}>
                           <Typography
                               textAlign={"start"}
                               component={"h2"}
@@ -484,26 +750,22 @@ const Statistics = () => {
                               marginTop={"12px"}
                               fontSize={"24px"}
                               lineHeight={"28px"}>
-                            {currentNegativeNews.snippet}
-                            <Link href={currentNegativeNews.link} variant="body2">link</Link>
+                            {item.snippet}
+                            <Link href={item.link} variant="body2">link</Link>
                           </Typography>
+                            </ModalContent>
+                          </Modal>
                         </CardContent>
+
                       </Card>
                     </Grid>
 
                   </Grid>
 
                 </Grid>
-                <Pagination
-                    size="medium"
-                    sx={{display: "flex", justifyContent: "center", position: "relative", marginTop: "30px"}}
-                    onChange={(_, newPage) => setCurrentNgPage(newPage)}
-                    count={negativeNews.length}
-                    page={currentNgPage}
-                />
               </Box>
-          }
-          {currentView === 'sanctions' && currentOpenSanction &&
+          ))}
+          {currentView === 'sanctions' && negativeNews &&
               <Box>
                 <Grid container spacing={0} sx={{direction: "column", justifyContent: "center", width: "100%"}}>
                   <Grid item xs={4}>
@@ -511,7 +773,7 @@ const Statistics = () => {
                       <Card sx={{textAlign: "center"}}>
                         <CardContent sx={{padding: "48px"}}>
                           <Box marginTop={"12px"}>
-                            {currentOpenSanction.caption}
+                            {negativeNews.caption}
                           </Box>
                           <Typography
                               display={"flex"}
@@ -520,9 +782,9 @@ const Statistics = () => {
                               component={"p"}
                               marginBottom={"12px"}>
                             Type :
-                            {currentOpenSanction.schema &&
+                            {negativeNews.schema &&
                                 <Typography marginLeft={"8px"} variant="body1">
-                                  {currentOpenSanction.schema}
+                                  {negativeNews.schema}
                                 </Typography>
                             }
                           </Typography>
