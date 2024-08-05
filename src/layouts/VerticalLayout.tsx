@@ -16,7 +16,8 @@ const ContentWrapper = styled("div")(({ theme }) => {
   return {
     backgroundColor: theme.palette.background.default,
     padding: "24px",
-    paddingTop: 0
+    paddingTop: 0,
+      height: "100vh"
   }
 })
 

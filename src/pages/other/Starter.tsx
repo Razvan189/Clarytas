@@ -9,7 +9,7 @@ import {
     Avatar,
     Box, Button, Collapse,
     Divider,
-    FormControlLabel,
+    FormControlLabel, Grid,
     IconButton,
     InputBase,
     MenuItem,
@@ -121,36 +121,140 @@ export const Starter = () => {
                                     sx={{  marginLeft: '12px', width: 55, height: 50 }} />
                             </IconButton>
                         </Paper>
-                        <FormControlLabel sx={{ p: '10px 15px', display: 'flex', alignItems: 'center', width: 300, height: 50, position: "absolute", left: "70%", top: "45%", transform: "translate(-50%, -50%)"}} control={<Switch checked={checked} onChange={toggle} />} label="Advanced filter" />
+                        <FormControlLabel sx={{ p: '10px 15px', display: 'flex', alignItems: 'center', width: 300, height: 50, position: "absolute", left: "70%", top: "42%", transform: "translate(-50%, -50%)"}} control={<Switch checked={checked} onChange={toggle} />} label="Advanced filter" />
                         <Collapse orientation="horizontal" in={checked}>
-                            <Paper
-                                component="form"
-                                sx={{ p: '10px 15px', display: 'flex', alignItems: 'center', width: 600, height: 50, position: "absolute", left: "50%", top: "60%", transform: "translate(-50%, -50%)"}}>
-                                <InputBase
-                                    sx={{ ml: 1, flex: 1 }}
-                                    placeholder="Enter terms you want to add to your seach"
-                                    value ={dynamic}
-                                    onChange={addFilter}
+                            <div style={{backgroundColor: "black"}}>
+                                <Box sx={{position: "absolute", top: "60%", left:"20%", }}>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginBottom: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Full Business Name"
+                                            value ={dynamic}
+                                            onChange={addFilter}
 
-                                />
-                                <Button variant="contained" color="primary" disable={query} size={"large"} onClick={(e) => add(e)}>
-                                    ADD
-                                </Button>
-                            </Paper>
-                            <Paper
-                                component="form"
-                                sx={{ p: '10px 15px', display: 'flex', alignItems: 'center', width: 600, height: 50, position: "absolute", left: "50%", top: "60%", transform: "translate(-50%, -50%)"}}>
-                                <InputBase
-                                    sx={{ ml: 1, flex: 1 }}
-                                    placeholder="Enter terms you want to add to your seach"
-                                    value ={dynamic}
-                                    onChange={addFilter}
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginBottom: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="DBA Name"
+                                            value ={dynamic}
+                                            onChange={addFilter}
 
-                                />
-                                <Button variant="contained" color="primary" disable={query} size={"large"} onClick={(e) => add(e)}>
-                                    ADD
-                                </Button>
-                            </Paper>
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form">
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Former business names"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form"
+                                    sx={{marginTop: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Registration number"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginTop: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Country"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                </Box>
+                                <Box sx={{position: "absolute", top: "60%", left:"60%"}}>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginBottom: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Company Type"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginBottom: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Date Of Incorporation"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form">
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Current Status"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginTop: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Subsidiaries"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                </Box>
+                            </div>
+
+
                         </Collapse>
                     </TabPanel>
                     <TabPanel value="person">
@@ -173,6 +277,225 @@ export const Starter = () => {
                                     sx={{  marginLeft: '12px', width: 55, height: 50 }} />
                             </IconButton>
                         </Paper>
+                        <FormControlLabel sx={{ p: '10px 15px', display: 'flex', alignItems: 'center', width: 300, height: 50, position: "absolute", left: "70%", top: "42%", transform: "translate(-50%, -50%)"}} control={<Switch checked={checked} onChange={toggle} />} label="Advanced filter" />
+                        <Collapse orientation="horizontal" in={checked}>
+                            <div style={{backgroundColor: "black"}}>
+                                <Box sx={{position: "absolute", top: "57%", left: "20%", }}>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginBottom: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Full Name"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginBottom: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Alias"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form">
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Former name"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form"
+                                        sx={{marginTop: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Date Of Birth"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginTop: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Doing Business In"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginTop: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Former Employer"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginTop: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Current Corporate Affiliations"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                </Box>
+                                <Box sx={{position: "absolute", top: "57%", left:"60%"}}>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginBottom: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Address(es)"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginBottom: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Citizens"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form">
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Phone Number(s)"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginTop: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Email address(es)"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginTop: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Universities attended"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginTop: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Current Employer"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginTop: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Previous Corporate Affiliations"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                    <Paper
+                                        component="form"
+                                        sx={{ marginTop: "25px"}}>
+                                        <InputBase
+                                            sx={{ ml: 1, flex: 1 }}
+                                            placeholder="Business Partners or Associates"
+                                            value ={dynamic}
+                                            onChange={addFilter}
+
+                                        />
+                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
+                                            ADD
+                                        </Button>
+                                    </Paper>
+                                </Box>
+                            </div>
+
+
+                        </Collapse>
                     </TabPanel>
 
                 </TabContext>
