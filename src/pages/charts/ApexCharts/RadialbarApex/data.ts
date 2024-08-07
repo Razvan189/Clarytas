@@ -3,7 +3,7 @@ import small2 from "@src/assets/images/small/small-2.jpg";
 
 export const basicRadialBarOpts: ApexOptions = {
   chart: {
-    height: 320,
+    height: 170,
     type: "radialBar",
   },
   plotOptions: {
@@ -16,9 +16,8 @@ export const basicRadialBarOpts: ApexOptions = {
       },
     },
   },
-  colors: ["#39afd1"],
-  series: [70],
-  labels: ["CRICKET"],
+  colors: ["#3e60d5"],
+  labels: ["Score"],
 };
 
 export const multipleRadialBarsOpts: ApexOptions = {
@@ -27,26 +26,25 @@ export const multipleRadialBarsOpts: ApexOptions = {
     type: "radialBar",
   },
   plotOptions: {
-    // circle: {
-    //     dataLabels: {
-    //         showOn: 'hover'
-    //     }
-    // },
+    circle: {
+        dataLabels: {
+            showOn: 'hover'
+        }
+    },
     radialBar: {
       track: {
         background: "rgba(170,184,197, 0.2)",
       },
     },
   },
-  colors: ["#6c757d", "#ffbc00", "#3e60d5", "#47ad77"],
-  series: [44, 55, 67, 83],
-  labels: ["Apples", "Oranges", "Bananas", "Berries"],
+  colors: ["#3e60d5"],
+  labels: ["Score"],
   responsive: [
     {
       breakpoint: 380,
       options: {
         chart: {
-          height: 260,
+          height: 170,
         },
       },
     },
@@ -210,7 +208,7 @@ export const strokedCircularGuageOpts: ApexOptions = {
 
 export const gradientCircularOpts: ApexOptions = {
   chart: {
-    height: 330,
+    height: 80,
     type: "radialBar",
     toolbar: {
       show: true,
@@ -245,17 +243,17 @@ export const gradientCircularOpts: ApexOptions = {
       dataLabels: {
         // showOn: 'always',
         name: {
-          offsetY: -10,
+          offsetY: -15,
           show: true,
           color: "#888",
-          fontSize: "17px",
+          fontSize: "12px",
         },
         value: {
           formatter: function (val: number) {
             return val.toString();
           },
           color: "#111",
-          fontSize: "36px",
+          fontSize: "26px",
           show: true,
         },
       },
@@ -274,11 +272,9 @@ export const gradientCircularOpts: ApexOptions = {
       stops: [0, 100],
     },
   },
-  series: [75],
   stroke: {
     lineCap: "round",
   },
-  labels: ["Percent"],
 };
 
 export const semiCircleGaugeOpts: ApexOptions = {

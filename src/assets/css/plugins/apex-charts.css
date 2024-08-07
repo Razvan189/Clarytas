@@ -1,8 +1,12 @@
 
 
   .apex-charts {
-    min-height: 10px !important;
-
+    position: absolute;
+    top: 5%;
+    display: flex;
+    left: 65%;
+    justify-content: center;
+    align-items: center;
     & text {
       font-family: var(--font-family-base) !important;
       fill: var(--text-color);
@@ -107,4 +111,8 @@
     & path {
       stroke: var(--stroke);
     }
+  }
+
+  .apexcharts-toolbar {
+    display: 'none' !important;
   }
