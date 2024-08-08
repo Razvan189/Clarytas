@@ -124,7 +124,7 @@ export const Starter = () => {
                         <FormControlLabel sx={{ p: '10px 15px', display: 'flex', alignItems: 'center', width: 300, height: 50, position: "absolute", left: "70%", top: "42%", transform: "translate(-50%, -50%)"}} control={<Switch checked={checked} onChange={toggle} />} label="Advanced filter" />
                         <Collapse orientation="horizontal" in={checked}>
                             <div style={{backgroundColor: "black"}}>
-                                <Box sx={{position: "absolute", top: "60%", left:"20%", }}>
+                                <Box sx={{position: "absolute", top: "60%", left:"30%", }}>
                                     <Paper
                                         component="form"
                                         sx={{ marginBottom: "25px"}}>
@@ -280,7 +280,7 @@ export const Starter = () => {
                         <FormControlLabel sx={{ p: '10px 15px', display: 'flex', alignItems: 'center', width: 300, height: 50, position: "absolute", left: "70%", top: "42%", transform: "translate(-50%, -50%)"}} control={<Switch checked={checked} onChange={toggle} />} label="Advanced filter" />
                         <Collapse orientation="horizontal" in={checked}>
                             <div style={{backgroundColor: "black"}}>
-                                <Box sx={{position: "absolute", top: "57%", left: "20%", }}>
+                                <Box sx={{position: "absolute", top: "57%", left: "30%", }}>
                                     <Paper
                                         component="form"
                                         sx={{ marginBottom: "25px"}}>

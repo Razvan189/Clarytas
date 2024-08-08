@@ -28,7 +28,11 @@ const VerticalLayout = ({ children }: { children: ReactNode }) => {
         style={{
           flexDirection: "column",
           display: "flex",
-          width: "100%"
+          width: "100%",
+          position: "absolute",
+          height: "100%",
+          overflowX: "hidden",
+            backgroundColor: "#f2f4f7"
         }}>
         <Suspense fallback={<div />}>
           <Topbar />

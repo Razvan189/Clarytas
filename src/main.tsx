@@ -21,6 +21,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           <SnackbarProvider>
             <App />
           </SnackbarProvider>
+
         </LayoutProvider>
       </AuthProvider>
     </HelmetProvider>

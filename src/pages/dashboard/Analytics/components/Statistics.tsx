@@ -4,10 +4,10 @@ import {
   Box,
   Button,
   Card,
-  CardContent,
+  CardContent, Checkbox,
   Divider, Drawer, Fade,
   Grid,
-  IconButton, InputBase, Modal,
+  IconButton, InputBase, LinearProgress, Modal,
   Pagination, Paper,
   Popover,
   SwipeableDrawer, Tab,
@@ -124,8 +124,15 @@ const Statistics = () => {
   const [numPages, setNumPages] = useState<number>();
   const [pageNumber, setPageNumber] = useState<number>(1);
 
+  const [reports, setReports] = useState([]);
+
   const [open, setOpen] = useState(undefined);
   const [openDocument, setOpenDocument] = useState(false)
+
+  const [isItemChecked, setItemChecked] = useState(false)
+
+
+  const [loading, setLoading] = useState(false);
   const handleOpen = (id) => setOpen(id);
   const handleClose = () => setOpen(undefined);
 
@@ -218,6 +225,44 @@ const Statistics = () => {
     setValue(newValue);
   };
 
+  const selectAll = (e) => {
+    const {checked} = e.target;
+    const collection = []
+    console.log(checked)
+    if(checked) {
+      companyData.forEach((item) => {
+        collection.push(item.name);
+      })
+    }
+    setReports(collection)
+    setItemChecked(checked)
+  }
+
+
+  const selectAllNews = (e) => {
+    const {checked} = e.target;
+    const collection = []
+    if(checked) {
+      negativeNews.forEach((item) => {
+        collection.push(item.title);
+      })
+    }
+    setReports(collection)
+    setItemChecked(checked)
+  }
+
+  const selectAllOpenSanctions = (e) => {
+    const {checked} = e.target;
+    const collection = []
+    if(checked) {
+      openSanctions.forEach((item) => {
+        collection.push(item.caption);
+      })
+    }
+    setReports(collection)
+    setItemChecked(checked)
+  }
+
   const fetchData = (name: string) => {
     try {
       fetch(`https://api.clarytas.online/search?schema=${value}&search_text=${name}&api_key=8c684101-29be-4b90-96f9-414c12e998f4`, {
@@ -233,6 +278,10 @@ const Statistics = () => {
         setNegativeNews(data.gc);
         setOpenSanctions(data.os);
 
+        if(response.ok && value === 'person') {
+          navigate('/pages/personStatistics', {state: {data: data, from: "/pages/Statistics"}})
+        }
+
       });
     }
 
@@ -241,9 +290,11 @@ const Statistics = () => {
     catch (e) {
       console.error(e)
     }
+
   }
 
   const addReport = (name: string) => {
+    setLoading(true);
     try {
       fetch(`https://api.clarytas.online/report?schema=${value}&search_text=${name}&api_key=a1e3b546-77ac-4eed-96c8-5c3b9aa076ef`, {
         method: "GET",
@@ -254,11 +305,17 @@ const Statistics = () => {
         setCount(count => count + 1)
         const data = await response.text();
         setReport(data);
+        reports.push(data);
       });
     }
     catch (e) {
       console.error(e)
     }
+
+
+    finally {
+        setLoading(false);
+      }
   }
 
   const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -282,9 +339,15 @@ const Statistics = () => {
     setQuery(event.target.value)
   }
 
+    const selectCompany = (event, index) => {
+        return companyData[index].name
+    }
+
 
   useEffect(() => {
-  }, [query]);
+  }, [loading]);
+
+
 
   const searchClick = () => {
     console.log(query)
@@ -293,6 +356,7 @@ const Statistics = () => {
 
   return (
         <>
+          {!loading ? <div>LOADING</div> : <LinearProgress />}
           <PageBreadcrumb title="Statistics" subName="Home" path={"/pages/Starter"}/>
           <Sidebar rootStyles={{
             position: "absolute",
@@ -422,17 +486,19 @@ const Statistics = () => {
           </TabContext>
           {report !== 'company' && <PDFViewer fileName="report.pdf" style={{justifyContent: "center", display: 'flex', position: 'absolute', height: "100%", left: "20%", zIndex: 30, width: "70%",  display: `${openDocument ? 'block' : 'none'}`}}>
             <Document  title={companyData[count].name}>
-              <Page size="A4" style={styles.page}>
-                <View style={styles.section}>
-                  <Text>{report}</Text>
-                </View>
-              </Page>
+              {reports.map((item) => (
+                  <Page size="A4" style={styles.page}>
+                    <View style={styles.section}>
+                      <Text>{item}</Text>
+                    </View>
+                  </Page>
+              ))}
             </Document>
           </PDFViewer>
           }
           <IconButton
               onClick={() => setOpenDocument(false)}
-              sx={{color: "white", paddingInlineStart:0, justifyContent: "center", alignItems: "center", display: 'flex', position: 'absolute', left: "80%", zIndex: 30, display: `${openDocument ? 'block' : 'none'}`}}>
+              sx={{color: "white", paddingInlineStart:0, justifyContent: "center", alignItems: "center", display: 'flex', position: 'absolute', left: "84.3%", marginTop:"10px", zIndex: 30, display: `${openDocument ? 'block' : 'none'}`}}>
             <LuX />
           </IconButton>
           <Grid container xs={8}
@@ -448,6 +514,49 @@ const Statistics = () => {
 
           <Grid container xs={6}
                 sx={{justifyContent: "center", display: 'flex', position: "absolute", left: "20%", top: "13%"}}>
+            {currentView === 'profile' && <Typography sx={{ textAlign: "center",
+              alignItems: "center",
+              display: "flex",
+              justifyContent: "center",
+              position: "absolute",
+              left: "14%",
+              marginTop: "0px"
+            }}><Checkbox
+                checked={isItemChecked}
+                onClick={(e) => {selectAll(e)}}
+                inputProps={{ 'aria-label': 'controlled' }}
+            />
+            </Typography>
+            }
+            {currentView === 'news' && <Typography sx={{ textAlign: "center",
+              alignItems: "center",
+              display: "flex",
+              justifyContent: "center",
+              position: "absolute",
+              left: "14%",
+              marginTop: "0px"
+            }}><Checkbox
+              checked={isItemChecked}
+              onClick={(e) => {selectAllNews(e)}}
+              inputProps={{ 'aria-label': 'controlled' }}
+              />
+              </Typography>
+            }
+            {currentView === 'sanctions' && <Typography sx={{ textAlign: "center",
+              alignItems: "center",
+              display: "flex",
+              justifyContent: "center",
+              position: "absolute",
+              left: "14%",
+              marginTop: "0px"
+            }}><Checkbox
+              checked={isItemChecked}
+              onClick={(e) => {selectAllOpenSanctions(e)}}
+              inputProps={{ 'aria-label': 'controlled' }}
+              />
+              </Typography>
+            }
+
             <LuDownload style={{cursor: "pointer", zIndex: 4, width: 100, height: 25}}/>
             <LuPrinter style={{cursor: "pointer", zIndex: 4, width: 100, height: 25}}/>
             <LuMail style={{cursor: "pointer", zIndex: 4, width: 100, height: 25}}/>
@@ -455,14 +564,21 @@ const Statistics = () => {
           <Divider sx={{width: "50%", my: 2, left: "25%", top: "17%", position: "absolute"}}/>
           {currentView === 'profile' && companyData.map((item, index) => (
               <Box sx={{flexGrow: 1}}>
-                <Typography sx={{ textAlign: "center",
-                  alignItems: "center",
-                  display: "flex",
-                  justifyContent: "center",
-                  position: "absolute",
-                  left: "28%",
-                  marginTop: "25px"
-                  }}>{index + 1 + "."}</Typography>
+                  <Typography sx={{ textAlign: "center",
+                      alignItems: "center",
+                      display: "flex",
+                       gap: "8px",
+                      justifyContent: "center",
+                      position: "absolute",
+                      left: "27%",
+                      marginTop: "30px"
+                  }}><Checkbox
+                      checked={reports.includes(item.name)}
+                      onClick={(e) => {selectCompany(e, index)}}
+                      inputProps={{ 'aria-label': 'controlled' }}
+                  />
+                      <h3>{index + 1 + "."}</h3>
+                  </Typography>
                 <Grid container spacing={3} sx={{
                   justifyContent: "center",
                   marginTop: 0,
@@ -471,15 +587,80 @@ const Statistics = () => {
                   left: 0,
                   top: 0
                 }}>
-                  <Grid item xs={5}>
+                  <Grid item xs={6} md={4}>
                     <Grid item sx={{justifyContent: "center"}}>
                       <Card sx={{textAlign: "center"}}>
                         <CardContent sx={{padding: "48px"}}>
                           <Box
-                              marginTop={"24" +
-                                  "px"}>
+                              marginTop={"24px"}>
                             {item.name}
                           </Box>
+                          <Typography
+                              display={"flex"}
+                              fontWeight={600}
+                              color={"grey.600"}
+                              marginTop={"24px"}
+                          >
+                            Address:
+                            <Typography marginLeft={"8px"} variant="body1">
+                              {item.registered_address_in_full ? item.registered_address_in_full : ""}
+                            </Typography>
+                          </Typography>
+                          <Typography
+                              display={"flex"}
+                              fontWeight={600}
+                              color={"grey.600"}
+                          >
+                            Registration Number:
+                            <Typography marginLeft={"8px"} variant="body1">
+                              {item.company_number}
+                            </Typography>
+                          </Typography>
+                          <Typography
+                              display={"flex"}
+                              fontWeight={600}
+                              color={"grey.600"}
+                          >
+                            SIC(Cod Caen):
+                            <Typography marginLeft={"8px"} variant="body1">
+                              {item.industry_codes.length > 0 &&
+                                item.industry_codes.map((val) => (
+                                    <Typography variant="body1">
+                                       {val.industry_code.code}
+                                    </Typography>
+                                ))}
+                            </Typography>
+                          </Typography>
+                          <Typography
+                              display={"flex"}
+                              fontWeight={600}
+                              color={"grey.600"}
+                          >
+                            Date of Incorporation:
+                            <Typography marginLeft={"8px"} variant="body1">
+                              {item.incorporation_date ? item.incorporation_date : ""}
+                            </Typography>
+                          </Typography>
+                          <Typography
+                              display={"flex"}
+                              fontWeight={600}
+                              color={"grey.600"}
+                          >
+                            Status:
+                            <Typography marginLeft={"8px"} variant="body1">
+                              {item.current_status ? item.current_status : ""}
+                            </Typography>
+                          </Typography>
+                          <Typography
+                              display={"flex"}
+                              fontWeight={600}
+                              color={"grey.600"}
+                          >
+                            Jurisdiction:
+                            <Typography marginLeft={"8px"} variant="body1">
+                               {item.jurisdiction_code[Object.keys(item.jurisdiction_code)].country}
+                            </Typography>
+                          </Typography>
                           <Box textAlign={"start"} marginTop={"24px"}>
                             <Button sx={{position: "absolute", zIndex: 3, left: "60%", top: "50%"}}
                                     onClick={() => handleOpen(index)}
@@ -727,7 +908,12 @@ const Statistics = () => {
                                 >
                                   SIC Codes:
                                   <Typography marginLeft={"8px"} variant="body1">
-                                    3711
+                                    {item.industry_codes.length > 0 &&
+                                        item.industry_codes.map((val) => (
+                                            <Typography marginLeft={"8px"} variant="body1">
+                                              {val.industry_code.code}
+                                            </Typography>
+                                        ))}
                                   </Typography>
                                 </Typography>
                                 <h2 style={{
@@ -801,14 +987,20 @@ const Statistics = () => {
 
           {currentView === 'news' && negativeNews.map((item, index) => (
               <Box sx={{flexGrow: 1}}>
-                <Typography sx={{ textAlign: "center",
-                  alignItems: "center",
-                  display: "flex",
-                  justifyContent: "center",
-                  position: "absolute",
-                  left: "28%",
-                  marginTop: "25px"
-                }}>{index + 1 + "."}</Typography>
+                  <Typography sx={{ textAlign: "center",
+                      alignItems: "center",
+                      display: "flex",
+                      justifyContent: "center",
+                      position: "absolute",
+                      left: "27%",
+                      marginTop: "30px"
+                  }}><Checkbox
+                      checked={reports.includes(item.title)}
+                      onClick={(e) => {selectCompany(e, index)}}
+                      inputProps={{ 'aria-label': 'controlled' }}
+                  />
+                      <h3>{index + 1 + "."}</h3>
+                  </Typography>
                 <Grid container spacing={3} sx={{
                   justifyContent: "center",
                   marginTop: 0,
@@ -1139,14 +1331,20 @@ const Statistics = () => {
           ))}
           {currentView === 'sanctions' && openSanctions.map((item, index) => (
               <Box sx={{flexGrow: 1}}>
-                <Typography sx={{ textAlign: "center",
-                  alignItems: "center",
-                  display: "flex",
-                  justifyContent: "center",
-                  position: "absolute",
-                  left: "28%",
-                  marginTop: "25px"
-                }}>{index + 1 + "."}</Typography>
+                  <Typography sx={{ textAlign: "center",
+                      alignItems: "center",
+                      display: "flex",
+                      justifyContent: "center",
+                      position: "absolute",
+                      left: "27%",
+                      marginTop: "30px"
+                  }}><Checkbox
+                      checked={reports.includes(item.caption)}
+                      onClick={(e) => {selectCompany(e, index)}}
+                      inputProps={{ 'aria-label': 'controlled' }}
+                  />
+                      <h3>{index + 1 + "."}</h3>
+                  </Typography>
                 <Grid container spacing={3} sx={{
                   justifyContent: "center",
                   marginTop: 0,
@@ -1155,10 +1353,20 @@ const Statistics = () => {
                   left: 0,
                   top: 0
                 }}>
+                  <Box sx={{position: "absolute", left: "-35%",top: "12%"}} width={"100%"}>
+                    <ReactApexChart
+                        className="apex-charts"
+                        options={basicRadialBarOpts}
+                        height={140}
+                        series={[item.score]}
+                        type="radialBar"
+                    />
+                  </Box>
                   <Grid item xs={5}>
                     <Grid item sx={{justifyContent: "center"}}>
                       <Card sx={{textAlign: "center"}}>
                         <CardContent sx={{padding: "48px"}}>
+
                           <Box
                               marginTop={"24" +
                                   "px"}>
@@ -1192,16 +1400,6 @@ const Statistics = () => {
                                         className="project-card card p-0 border-5 border-dark shadow-lg">
                                   <Plus style={{marginRight: "6px"}}/> Add to Report
                                 </Button>
-                                <Box width={"100%"}>
-                                  <ReactApexChart
-                                      className="apex-charts"
-                                      options={basicRadialBarOpts}
-                                      height={160}
-                                      series={[item.score]}
-                                      type="radialBar"
-                                  />
-                                </Box>
-
                                 <h1 style={{
                                   textAlign: "center",
                                   alignItems: "center",
