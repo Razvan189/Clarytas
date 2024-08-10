@@ -10,7 +10,7 @@ import {
   IconButton, InputBase, LinearProgress, Modal,
   Pagination, Paper,
   Popover,
-  SwipeableDrawer, Tab,
+  SwipeableDrawer, Switch, Tab,
   Typography
 } from "@mui/material";
 import DialogContent from '@mui/material/DialogContent';
@@ -18,7 +18,7 @@ import Dialog from '@mui/material/Dialog';
 import { useEffect, useState} from "react";
 import Link from '@mui/material/Link';
 import { useLocation, useNavigate} from "react-router-dom";
-import {Menu, MenuItem, Sidebar, SubMenu} from "react-pro-sidebar";
+import {Menu, MenuItem, MenuItemStyles, Sidebar, SubMenu} from "react-pro-sidebar";
 import {ComponentContainerCard, PageBreadcrumb} from "@src/components";
 import SearchIcon from "@mui/icons-material/Search";
 import ErrorNotFound from "@src/pages/error/ErrorNotFound.tsx";
@@ -57,53 +57,44 @@ const Statistics = () => {
   }
 
 
-  const grey = {
-    50: '#F3F6F9',
-    100: '#E5EAF2',
-    200: '#DAE2ED',
-    300: '#C7D0DD',
-    400: '#B0B8C4',
-    500: '#9DA8B7',
-    600: '#6B7A90',
-    700: '#434D5B',
-    800: '#303740',
-    900: '#1C2025',
+  type Theme = 'light' | 'dark';
+
+  const themes = {
+    light: {
+      sidebar: {
+        backgroundColor: '#ffffff',
+        color: '#607489',
+      },
+      menu: {
+        menuContent: '#fbfcfd',
+        icon: '#0098e5',
+        hover: {
+          backgroundColor: '#c5e4ff',
+          color: '#44596e',
+        },
+        disabled: {
+          color: '#9fb6cf',
+        },
+      },
+    },
+    dark: {
+      sidebar: {
+        backgroundColor: '#0b2948',
+        color: '#8ba1b7',
+      },
+      menu: {
+        menuContent: '#082440',
+        icon: '#59d0ff',
+        hover: {
+          backgroundColor: '#00458b',
+          color: '#b6c8d9',
+        },
+        disabled: {
+          color: '#3e5e7e',
+        },
+      },
+    },
   };
-
-  const ModalContent = styled('div')(
-      ({ theme }) => css`
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-weight: 500;
-    text-align: start;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    overflow: hidden;
-    float: right;    
-    background-color: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
-    border-radius: 8px;
-    border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
-    box-shadow: 0 4px 12px
-      ${theme.palette.mode === 'dark' ? 'rgb(0 0 0 / 0.5)' : 'rgb(0 0 0 / 0.2)'};
-    padding: 24px;
-    color: ${theme.palette.mode === 'dark' ? grey[50] : grey[900]};
-
-    & .modal-title {
-      margin: 0;
-      line-height: 1.5rem;
-      margin-bottom: 8px;
-    }
-
-    & .modal-description {
-      margin: 0;
-      line-height: 1.5rem;
-      font-weight: 400;
-      color: ${theme.palette.mode === 'dark' ? grey[400] : grey[800]};
-      margin-bottom: 4px;
-    }
-  `,
-  );
 
   const [companyData, setCompanyData] = useState(state.data.oc);
 
@@ -130,6 +121,10 @@ const Statistics = () => {
   const [openDocument, setOpenDocument] = useState(false)
 
   const [isItemChecked, setItemChecked] = useState(false)
+
+  const [theme, setTheme] = useState<Theme>('light');
+
+  const [rtl, setRtl] = useState(false);
 
 
   const [loading, setLoading] = useState(false);
@@ -347,6 +342,52 @@ const Statistics = () => {
   useEffect(() => {
   }, [loading]);
 
+  const hexToRgba = (hex: string, alpha: number) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+
+
+  const menuItemStyles: MenuItemStyles = {
+    root: {
+      fontSize: '13px',
+      fontWeight: 400,
+    },
+    icon: {
+      color: themes[theme].menu.icon
+    },
+    SubMenuExpandIcon: {
+      color: '#b6b7b9',
+    },
+    subMenuContent: ({ level }) => ({
+      backgroundColor:
+          level === 0
+              ? hexToRgba(themes[theme].menu.menuContent,  1)
+              : 'transparent',
+    }),
+    button: {
+      '&:hover': {
+        backgroundColor: hexToRgba(themes[theme].menu.hover.backgroundColor,  1),
+        color: themes[theme].menu.hover.color,
+      },
+    },
+    label: ({ open }) => ({
+      fontWeight: open ? 600 : undefined,
+    }),
+  };
+
+  const handleRTLChange = (e) => {
+    setRtl(e.target.checked);
+  };
+
+  // handle on theme change event
+  const handleThemeChange = (e ) => {
+    setTheme(e.target.checked ? 'dark' : 'light');
+  };
+
 
 
   const searchClick = () => {
@@ -356,49 +397,95 @@ const Statistics = () => {
 
   return (
         <>
-          {!loading ? <div>LOADING</div> : <LinearProgress />}
+          <Switch
+              id="theme"
+              checked={theme === 'dark'}
+              onChange={handleThemeChange}
+              label="Dark theme"
+          />
           <PageBreadcrumb title="Statistics" subName="Home" path={"/pages/Starter"}/>
-          <Sidebar rootStyles={{
-            position: "absolute",
-            height: "100%",
-          }}>
-            <Menu
-                menuItemStyles={{
-                  button: ({level, active, disabled}) => {
-                    // only apply styles on first level elements of the tree
-                    if (level === 0)
-                      return {
-                        backgroundColor: active ? '#dee2e6' : undefined,
-                      };
-                  },
-                }}>
-              <SubMenu label="Categories">
-                <MenuItem active={currentView === 'news'} onClick={() => setCurrentView('news')}> Negative
-                  News </MenuItem>
-                <MenuItem active={currentView === 'profile'} onClick={() => setCurrentView('profile')}> Company
-                  Sources </MenuItem>
-                <MenuItem active={currentView === 'sanctions'} onClick={() => setCurrentView('sanctions')}> Sanctions &
-                  Watchlists </MenuItem>
-                <MenuItem active={currentView === 'exposed'} onClick={() => setCurrentView('exposed')}> Politically
-                  Exposed Persons </MenuItem>
-                <MenuItem active={currentView === 'legal'} onClick={() => setCurrentView('legal')}> Legal
-                  Sources </MenuItem>
-              </SubMenu>
-              <SubMenu label="Search Within Results">
-              </SubMenu>
-              <SubMenu label="Date Range">
+          <Sidebar
+              image="https://user-images.githubusercontent.com/25878302/144499035-2911184c-76d3-4611-86e7-bc4e8ff84ff5.jpg"
+              rtl={rtl}
+              breakPoint="md"
+              backgroundColor={hexToRgba(themes[theme].sidebar.backgroundColor,  1)}
+              rootStyles={{
+                color: themes[theme].sidebar.color,
+              }}
+          >
 
-              </SubMenu>
-              <SubMenu label="Company">
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <div style={{ flex: 1, marginBottom: '32px' }}>
+                <div style={{ padding: '0 24px', marginBottom: '8px' }}>
+                  <Typography
+                      variant="body2"
+                      fontWeight={600}
+                      style={{ opacity: 0.7, letterSpacing: '0.5px' }}
+                  >
+                    General
+                  </Typography>
+                </div>
+                <Menu menuItemStyles={menuItemStyles}>
+                  <SubMenu
+                      label="Charts"
+                      suffix={
+                        <Badge variant="danger" shape="circle">
+                          6
+                        </Badge>
+                      }
+                  >
+                    <MenuItem> Pie charts</MenuItem>
+                    <MenuItem> Line charts</MenuItem>
+                    <MenuItem> Bar charts</MenuItem>
+                  </SubMenu>
+                  <SubMenu label="Maps" >
+                    <MenuItem> Google maps</MenuItem>
+                    <MenuItem> Open street maps</MenuItem>
+                  </SubMenu>
+                  <SubMenu label="Theme" >
+                    <MenuItem> Dark</MenuItem>
+                    <MenuItem> Light</MenuItem>
+                  </SubMenu>
+                  <SubMenu label="Components">
+                    <MenuItem> Grid</MenuItem>
+                    <MenuItem> Layout</MenuItem>
+                    <SubMenu label="Forms">
+                      <MenuItem> Input</MenuItem>
+                      <MenuItem> Select</MenuItem>
+                      <SubMenu label="More">
+                        <MenuItem> CheckBox</MenuItem>
+                        <MenuItem> Radio</MenuItem>
+                      </SubMenu>
+                    </SubMenu>
+                  </SubMenu>
+                  <SubMenu label="E-commerce" >
+                    <MenuItem> Product</MenuItem>
+                    <MenuItem> Orders</MenuItem>
+                    <MenuItem> Credit card</MenuItem>
+                  </SubMenu>
+                </Menu>
 
-              </SubMenu>
-              <SubMenu label="Source Type">
+                <div style={{ padding: '0 24px', marginBottom: '8px', marginTop: '32px' }}>
+                  <Typography
+                      variant="body2"
+                      fontWeight={600}
+                      style={{ opacity:  0.7, letterSpacing: '0.5px' }}
+                  >
+                    Extra
+                  </Typography>
+                </div>
 
-              </SubMenu>
-              <SubMenu label="Source">
-
-              </SubMenu>
-            </Menu>
+                <Menu menuItemStyles={menuItemStyles}>
+                  <MenuItem suffix={<Badge variant="success">New</Badge>}>
+                    Calendar
+                  </MenuItem>
+                  <MenuItem >Documentation</MenuItem>
+                  <MenuItem disabled >
+                    Examples
+                  </MenuItem>
+                </Menu>
+              </div>
+            </div>
           </Sidebar>
           <TabContext value={value}>
             <Box sx={{

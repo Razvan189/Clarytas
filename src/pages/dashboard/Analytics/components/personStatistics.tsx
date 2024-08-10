@@ -122,7 +122,7 @@ const PersonStatistics = () => {
 
     const [open, setOpen] = useState(undefined);
     const [openDocument, setOpenDocument] = useState(false)
-    const handleOpen = (id) => setOpen(id);
+    const handleOpen = (id:number) => setOpen(id);
     const handleClose = () => setOpen(undefined);
 
     let [reports, setReports] = useState([]);
@@ -214,7 +214,7 @@ const PersonStatistics = () => {
         setView(view);
     };
 
-    const changeTab = (event, newValue: string) => {
+    const changeTab = (event: HTMLElementEventMap, newValue: string) => {
         setValue(newValue);
     };
 
@@ -257,6 +257,7 @@ const PersonStatistics = () => {
                 setCount(count => count + 1)
                 const data = await response.text();
                 setReport(data);
+                // @ts-ignore
                 reports.push(data);
 
             });

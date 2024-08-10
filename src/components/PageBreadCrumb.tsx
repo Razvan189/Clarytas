@@ -12,15 +12,14 @@ import { LuChevronLast, LuChevronLeft, LuChevronRight } from "react-icons/lu";
 type BreadcrumbProps = {
   title: string;
   subName?: string;
-  path: string;
 };
 
-const PageBreadcrumb = ({ title, subName, path }: BreadcrumbProps) => {
+const PageBreadcrumb = ({ title, subName }: BreadcrumbProps) => {
   const breadcrumbItems = [
       <Typography key="3" variant="body2">
           <h2>{title}</h2>
       </Typography>,
-    <Link key="2" color="inherit" underline="none" to={path} style={{color: "#50555c"}} >
+    <Link key="2" color="inherit" style={{color: "#50555c"}} >
         <Typography key="3" variant="body2">
             <h2>{subName}</h2>
         </Typography>

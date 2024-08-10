@@ -23,6 +23,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import {useLocation, useNavigate} from "react-router-dom";
 import {TabContext, TabList, TabPanel} from "@mui/lab";
 import avatar1 from "@src/assets/images/avatars/avatar1.png";
+import "../../assets/css/plugins/dropdown.css";
 
 
 
@@ -33,12 +34,14 @@ export const Starter = () => {
     const [value, setValue] = useState('company');
     const [dynamic, setDynamic] = useState("")
     const [checked, setChecked] = useState(false);
+    const [showFilter, setFilter] = useState(false)
 
     const [array, setArray] = useState([]);
 
     const toggle = () => {
         setChecked((prev) => !prev);
     };
+
 
     const changeTab = (event, newValue: string) => {
         setValue(newValue);
@@ -91,411 +94,309 @@ export const Starter = () => {
         console.log(array)
     }
 
+    const rotate = !showFilter ? "rotate(90deg)" : "rotate(-90deg)"
+
     return (
         <>
             <Box sx={{typography: 'body1' }}>
                 <TabContext value={value}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider', display: "flex", justifyContent: "center", top: "35%", left: "45%", position: "absolute" }}>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider', display: "flex", justifyContent: "center", top: "20%", left: "50%", position: "absolute", transform: "translate(-50%, 50%)" }}>
                         <TabList onChange={changeTab} aria-label="lab API tabs example">
-                            <Tab label="Company" value="company" />
-                            <Tab label="Person" value="person" />
+                            <Tab label="Company" value="company" sx={{"&.MuiButtonBase-root" :{
+                                color: "white", fontSize: "28px"}
+                                }} />
+                            <Tab label="Person" value="person" sx={{"&.MuiButtonBase-root" :{
+                                    color: "white", fontSize: "28px"}
+                            }}/>
                         </TabList>
                     </Box>
                     <TabPanel value="company">
-                        <Paper
-                            component="form"
-                            sx={{ p: '10px 15px', display: 'flex', alignItems: 'center', width: 1000, height: 50, position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)"}}>
+                        <button
+                            onClick={() => setFilter(!showFilter)}
+                            className="button">
+                            Search Options
+                            <svg fill="currentColor" viewBox="0 0 24 24" className="icon" style={{transform: rotate}}>
+                                <path clip-rule="evenodd"
+                                      d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z"
+                                      fill-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    <Paper
+                        component="form"
+                        sx={{
+                            p: '10px 15px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            width: 1000,
+                            height: 50,
+                                position: "absolute",
+                                left: "50%",
+                                top: "40%",
+                                transform: "translate(-50%, -50%)"
+                            }}>
                             <InputBase
-                                sx={{ ml: 1, flex: 1 }}
+                                sx={{ml: 1, flex: 1}}
                                 placeholder="Enter a company name"
-                                value = {query}
+                                value={query}
                                 onChange={handleChange}
                             />
-                            <IconButton type="button" sx={{    ml: 1,
+                            <IconButton type="button" sx={{
+                                ml: 1,
                                 "&.MuiButtonBase-root:hover": {
                                     bgcolor: "transparent"
-                                }, backgroundColor: 'transparent', p: '5px', align: "center" }} aria-label="search">
-                                <Divider sx={{ height: 70, m: 0.5 }} orientation="vertical" />
+                                }, p: '5px', align: "center"
+                            }} aria-label="search">
+                                <Divider sx={{height: 70, m: 0.5}} orientation="vertical"/>
                                 <SearchIcon
                                     onClick={() => clickSearch()}
-                                    sx={{  marginLeft: '12px', width: 55, height: 50 }} />
+                                    sx={{marginLeft: '12px', width: 55, height: 50}}/>
                             </IconButton>
                         </Paper>
-                        <FormControlLabel sx={{ p: '10px 15px', display: 'flex', alignItems: 'center', width: 300, height: 50, position: "absolute", left: "70%", top: "42%", transform: "translate(-50%, -50%)"}} control={<Switch checked={checked} onChange={toggle} />} label="Advanced filter" />
-                        <Collapse orientation="horizontal" in={checked}>
-                            <div style={{backgroundColor: "black"}}>
-                                <Box sx={{position: "absolute", top: "60%", left:"30%", }}>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginBottom: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Full Business Name"
-                                            value ={dynamic}
-                                            onChange={addFilter}
+                        {showFilter &&
+                            <Box>
+                                <Grid container xs={4} xl={12} sx={{ position: "absolute", top: "60%", transform: "translate(-20%, 50%)"}}>
+                                    <div class="container">
+                                        <div class="container__item">
+                                            <form className="form">
+                                                <input type="email" className="form__field"
+                                                       placeholder="Full Business Name"/>
+                                                <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                                </button>
+                                            </form>
+                                            <form className="form">
+                                                <input type="email" className="form__field"
+                                                       placeholder="YDoing Business As (DBA) Name"/>
+                                                <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                                </button>
+                                            </form>
+                                            <form className="form">
+                                                <input type="email" className="form__field"
+                                                       placeholder="Former business names"/>
+                                                <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                                </button>
+                                            </form>
+                                            <form className="form">
+                                                <input type="email" className="form__field"
+                                                       placeholder="Registration Number"/>
+                                                <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                                </button>
+                                            </form>
+                                            <form className="form">
+                                                <input type="email" className="form__field" placeholder="Country"/>
+                                                <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </Grid>
+                            </Box>
+                        }
 
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginBottom: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="DBA Name"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form">
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Former business names"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form"
-                                    sx={{marginTop: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Registration number"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginTop: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Country"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                </Box>
-                                <Box sx={{position: "absolute", top: "60%", left:"60%"}}>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginBottom: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Company Type"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginBottom: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Date Of Incorporation"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form">
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Current Status"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginTop: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Subsidiaries"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                </Box>
+                        {showFilter && <Box>
+                            <Grid container xs={4} xl={12} sx={{ position: "absolute", top: "60%", transform: "translate(25%, 50%)"}}>
+                        <div class="container">
+                            <div class="container__item">
+                                <form className="form">
+                                    <input type="email" className="form__field"
+                                           placeholder="Company Type"/>
+                                    <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                    </button>
+                                </form>
+                                <form className="form">
+                                    <input type="email" className="form__field"
+                                           placeholder="Date of Incorporation"/>
+                                    <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                    </button>
+                                </form>
+                                <form className="form">
+                                    <input type="email" className="form__field"
+                                           placeholder="Current Status"/>
+                                    <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                    </button>
+                                </form>
+                                <form className="form">
+                                    <input type="email" className="form__field"
+                                           placeholder="Subsidiaries"/>
+                                    <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                    </button>
+                                </form>
                             </div>
+                        </div>
+                    </Grid>
+            </Box>
+                        }
 
 
-                        </Collapse>
+
                     </TabPanel>
                     <TabPanel value="person">
+                        <button
+                            onClick={() => setFilter(!showFilter)}
+                            className="button">
+                            Search Options
+                            <svg fill="currentColor" viewBox="0 0 24 24" className="icon" style={{transform: rotate}}>
+                                <path clip-rule="evenodd"
+                                      d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z"
+                                      fill-rule="evenodd"></path>
+                            </svg>
+                        </button>
                         <Paper
                             component="form"
-                            sx={{ p: '10px 15px', display: 'flex', alignItems: 'center', width: 1000, height: 50, position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)"}}>
+                            sx={{
+                                p: '10px 15px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                width: 1000,
+                                height: 50,
+                                position: "absolute",
+                                left: "50%",
+                                top: "40%",
+                                transform: "translate(-50%, -50%)"
+                            }}>
                             <InputBase
-                                sx={{ ml: 1, flex: 1 }}
+                                sx={{ml: 1, flex: 1}}
                                 placeholder="Enter a person name"
-                                value = {query}
+                                value={query}
                                 onChange={handleChange}
                             />
-                            <IconButton type="button" sx={{    ml: 1,
+                            <IconButton type="button" sx={{
+                                ml: 1,
                                 "&.MuiButtonBase-root:hover": {
                                     bgcolor: "transparent"
-                                }, backgroundColor: 'transparent', p: '5px', align: "center" }} aria-label="search">
-                                <Divider sx={{ height: 70, m: 0.5 }} orientation="vertical" />
+                                }, backgroundColor: 'transparent', p: '5px', align: "center"
+                            }} aria-label="search">
+                                <Divider sx={{height: 70, m: 0.5}} orientation="vertical"/>
                                 <SearchIcon
                                     onClick={() => clickSearch()}
-                                    sx={{  marginLeft: '12px', width: 55, height: 50 }} />
+                                    sx={{marginLeft: '12px', width: 55, height: 50}}/>
                             </IconButton>
                         </Paper>
-                        <FormControlLabel sx={{ p: '10px 15px', display: 'flex', alignItems: 'center', width: 300, height: 50, position: "absolute", left: "70%", top: "42%", transform: "translate(-50%, -50%)"}} control={<Switch checked={checked} onChange={toggle} />} label="Advanced filter" />
-                        <Collapse orientation="horizontal" in={checked}>
-                            <div style={{backgroundColor: "black"}}>
-                                <Box sx={{position: "absolute", top: "57%", left: "30%", }}>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginBottom: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Full Name"
-                                            value ={dynamic}
-                                            onChange={addFilter}
+                        {showFilter &&
+                            <Box sx={{ transition: "all 5s ease-in-out"}}>
+                                <Grid container xs={4} xl={12} sx={{ position: "absolute", top: "60%", transform: "translate(-20%, 50%)"}}>
+                                    <div class="container">
+                                        <div class="container__item">
+                                            <form className="form">
+                                                <input type="email" className="form__field"
+                                                       placeholder="Full Name"/>
+                                                <button type="button"
+                                                        className="btn btn--primary btn--inside uppercase">add
+                                                </button>
+                                            </form>
+                                            <form className="form">
+                                                <input type="email" className="form__field"
+                                                       placeholder="Alias"/>
+                                                <button type="button"
+                                                        className="btn btn--primary btn--inside uppercase">add
+                                                </button>
+                                            </form>
+                                            <form className="form">
+                                                <input type="email" className="form__field"
+                                                       placeholder="Maiden or former name"/>
+                                                <button type="button"
+                                                        className="btn btn--primary btn--inside uppercase">add
+                                                </button>
+                                            </form>
+                                            <form className="form">
+                                                <input type="email" className="form__field"
+                                                       placeholder="Phone Number(s)"/>
+                                                <button type="button"
+                                                        className="btn btn--primary btn--inside uppercase">add
+                                                </button>
+                                            </form>
+                                            <form className="form">
+                                                <input type="email" className="form__field"
+                                                       placeholder="Date of Birth"/>
+                                                <button type="button"
+                                                        className="btn btn--primary btn--inside uppercase">add
+                                                </button>
+                                            </form>
+                                            <form className="form">
+                                                <input type="email" className="form__field"
+                                                       placeholder="Doing Business in"/>
+                                                <button type="button"
+                                                        className="btn btn--primary btn--inside uppercase">add
+                                                </button>
+                                            </form>
+                                            <form className="form">
+                                                <input type="email" className="form__field"
+                                                       placeholder="Address(es)"/>
+                                                <button type="button"
+                                                        className="btn btn--primary btn--inside uppercase">add
+                                                </button>
+                                            </form>
+                                            <form className="form">
+                                                <input type="email" className="form__field"
+                                                       placeholder="Citizenships"/>
+                                                <button type="button"
+                                                        className="btn btn--primary btn--inside uppercase">add
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </Grid>
+                            </Box>
+                        }
+                        {showFilter &&
+                            <Box>
+                                <Grid container xs={4} xl={12}
+                                      sx={{position: "absolute", top: "60%", transform: "translate(25%, 50%)"}}>
+                                <div class="container">
+                                    <div class="container__item">
+                                        <form className="form">
+                                            <input type="email" className="form__field"
+                                                   placeholder="Email address(es)"/>
+                                            <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                            </button>
+                                        </form>
+                                        <form className="form">
+                                            <input type="email" className="form__field"
+                                                   placeholder="Universities attended"/>
+                                            <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                            </button>
+                                        </form>
+                                        <form className="form">
+                                            <input type="email" className="form__field"
+                                                   placeholder="Current Employer"/>
+                                            <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                            </button>
+                                        </form>
+                                        <form className="form">
+                                            <input type="email" className="form__field"
+                                                   placeholder="Current Employer"/>
+                                            <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                            </button>
+                                        </form>
+                                        <form className="form">
+                                            <input type="email" className="form__field"
+                                                   placeholder="Former Employer(s)"/>
+                                            <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                            </button>
+                                        </form>
+                                        <form className="form">
+                                            <input type="email" className="form__field"
+                                                   placeholder="Current Corporate Affiliations"/>
+                                            <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                            </button>
+                                        </form>
+                                        <form className="form">
+                                            <input type="email" className="form__field"
+                                                   placeholder="Previous Corporate Affiliations"/>
+                                            <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                            </button>
+                                        </form>
+                                        <form className="form">
+                                            <input type="email" className="form__field"
+                                                   placeholder="Business Partners or Associates"/>
+                                            <button type="button" className="btn btn--primary btn--inside uppercase">add
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </Grid>
+                        </Box>
+                        }
 
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginBottom: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Alias"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form">
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Former name"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form"
-                                        sx={{marginTop: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Date Of Birth"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginTop: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Doing Business In"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginTop: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Former Employer"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginTop: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Current Corporate Affiliations"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                </Box>
-                                <Box sx={{position: "absolute", top: "57%", left:"60%"}}>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginBottom: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Address(es)"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginBottom: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Citizens"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form">
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Phone Number(s)"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginTop: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Email address(es)"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginTop: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Universities attended"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginTop: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Current Employer"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginTop: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Previous Corporate Affiliations"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                    <Paper
-                                        component="form"
-                                        sx={{ marginTop: "25px"}}>
-                                        <InputBase
-                                            sx={{ ml: 1, flex: 1 }}
-                                            placeholder="Business Partners or Associates"
-                                            value ={dynamic}
-                                            onChange={addFilter}
-
-                                        />
-                                        <Button variant="contained" color="primary" disable={query} size={"small"} onClick={(e) => add(e)}>
-                                            ADD
-                                        </Button>
-                                    </Paper>
-                                </Box>
-                            </div>
-
-
-                        </Collapse>
                     </TabPanel>
 
                 </TabContext>
