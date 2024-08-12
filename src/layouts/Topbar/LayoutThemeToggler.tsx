@@ -12,7 +12,7 @@ const LayoutThemeToggler = () => {
   const { themeMode, updateTheme } = useLayoutContext();
 
   return (
-    <IconButton color={"inherit"} onClick={() => updateTheme(themeMode == "light" ? "dark" : "light")}>
+    <IconButton sx={{color: "white"}} onClick={() => updateTheme(themeMode == "light" ? "dark" : "light")}>
       {themeMode == "light" ? <LuMoon /> : <LuSunMedium />}
     </IconButton>
   );

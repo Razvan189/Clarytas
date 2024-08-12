@@ -7,15 +7,15 @@ import {
   CardContent, Checkbox,
   Divider, Drawer, Fade,
   Grid,
-  IconButton, InputBase, LinearProgress, Modal,
+  IconButton, InputBase, LinearProgress, List, ListItem, ListItemButton, ListItemText, Modal,
   Pagination, Paper,
-  Popover,
+  Popover, Slide,
   SwipeableDrawer, Switch, Tab,
   Typography
 } from "@mui/material";
 import DialogContent from '@mui/material/DialogContent';
 import Dialog from '@mui/material/Dialog';
-import { useEffect, useState} from "react";
+import {Fragment, useEffect, useState} from "react";
 import Link from '@mui/material/Link';
 import { useLocation, useNavigate} from "react-router-dom";
 import {Menu, MenuItem, MenuItemStyles, Sidebar, SubMenu} from "react-pro-sidebar";
@@ -37,6 +37,7 @@ import {
   multipleRadialBarsOpts
 } from "@src/pages/charts/ApexCharts/RadialbarApex/data.ts";
 import PersonStatistics from "@src/pages/dashboard/Analytics/components/personStatistics.tsx";
+import {TransitionProps} from "@mui/material/transitions";
 
 
 
@@ -130,6 +131,18 @@ const Statistics = () => {
   const [loading, setLoading] = useState(false);
   const handleOpen = (id) => setOpen(id);
   const handleClose = () => setOpen(undefined);
+
+
+  const Transition = React.forwardRef(function Transition(
+      props: TransitionProps & {
+        children: React.ReactElement<any, any>;
+      },
+      ref: React.Ref<unknown>,
+  ) {
+    return <Slide direction="left" ref={ref} {...props} />;
+  });
+
+
 
   const styles = StyleSheet.create({
     page: {
@@ -326,7 +339,10 @@ const Statistics = () => {
     },
     '& .MuiDialog-paper': {
       maxWidth: "900px",
-      float: "right"
+      float: "right",
+      right: 0,
+      position: "absolute",
+      margin:0
     }
   }));
 
@@ -353,12 +369,14 @@ const Statistics = () => {
 
   const menuItemStyles: MenuItemStyles = {
     root: {
-      fontSize: '13px',
+      fontSize: '16px',
       fontWeight: 400,
+      color: "black"
     },
     icon: {
       color: themes[theme].menu.icon
     },
+
     SubMenuExpandIcon: {
       color: '#b6b7b9',
     },
@@ -369,6 +387,9 @@ const Statistics = () => {
               : 'transparent',
     }),
     button: {
+      '&.active' :{
+        backgroundColor: hexToRgba(themes[theme].menu.hover.backgroundColor,  1)
+      },
       '&:hover': {
         backgroundColor: hexToRgba(themes[theme].menu.hover.backgroundColor,  1),
         color: themes[theme].menu.hover.color,
@@ -396,1219 +417,1243 @@ const Statistics = () => {
   }
 
   return (
-        <>
-          <Switch
-              id="theme"
-              checked={theme === 'dark'}
-              onChange={handleThemeChange}
-              label="Dark theme"
-          />
-          <PageBreadcrumb title="Statistics" subName="Home" path={"/pages/Starter"}/>
-          <Sidebar
-              image="https://user-images.githubusercontent.com/25878302/144499035-2911184c-76d3-4611-86e7-bc4e8ff84ff5.jpg"
-              rtl={rtl}
-              breakPoint="md"
-              backgroundColor={hexToRgba(themes[theme].sidebar.backgroundColor,  1)}
-              rootStyles={{
-                color: themes[theme].sidebar.color,
-              }}
-          >
-
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              <div style={{ flex: 1, marginBottom: '32px' }}>
-                <div style={{ padding: '0 24px', marginBottom: '8px' }}>
-                  <Typography
-                      variant="body2"
-                      fontWeight={600}
-                      style={{ opacity: 0.7, letterSpacing: '0.5px' }}
-                  >
-                    General
-                  </Typography>
-                </div>
-                <Menu menuItemStyles={menuItemStyles}>
-                  <SubMenu
-                      label="Charts"
-                      suffix={
-                        <Badge variant="danger" shape="circle">
-                          6
-                        </Badge>
-                      }
-                  >
-                    <MenuItem> Pie charts</MenuItem>
-                    <MenuItem> Line charts</MenuItem>
-                    <MenuItem> Bar charts</MenuItem>
-                  </SubMenu>
-                  <SubMenu label="Maps" >
-                    <MenuItem> Google maps</MenuItem>
-                    <MenuItem> Open street maps</MenuItem>
-                  </SubMenu>
-                  <SubMenu label="Theme" >
-                    <MenuItem> Dark</MenuItem>
-                    <MenuItem> Light</MenuItem>
-                  </SubMenu>
-                  <SubMenu label="Components">
-                    <MenuItem> Grid</MenuItem>
-                    <MenuItem> Layout</MenuItem>
-                    <SubMenu label="Forms">
-                      <MenuItem> Input</MenuItem>
-                      <MenuItem> Select</MenuItem>
-                      <SubMenu label="More">
-                        <MenuItem> CheckBox</MenuItem>
-                        <MenuItem> Radio</MenuItem>
-                      </SubMenu>
-                    </SubMenu>
-                  </SubMenu>
-                  <SubMenu label="E-commerce" >
-                    <MenuItem> Product</MenuItem>
-                    <MenuItem> Orders</MenuItem>
-                    <MenuItem> Credit card</MenuItem>
-                  </SubMenu>
-                </Menu>
-
-                <div style={{ padding: '0 24px', marginBottom: '8px', marginTop: '32px' }}>
-                  <Typography
-                      variant="body2"
-                      fontWeight={600}
-                      style={{ opacity:  0.7, letterSpacing: '0.5px' }}
-                  >
-                    Extra
-                  </Typography>
-                </div>
-
-                <Menu menuItemStyles={menuItemStyles}>
-                  <MenuItem suffix={<Badge variant="success">New</Badge>}>
-                    Calendar
-                  </MenuItem>
-                  <MenuItem >Documentation</MenuItem>
-                  <MenuItem disabled >
-                    Examples
-                  </MenuItem>
-                </Menu>
-              </div>
-            </div>
-          </Sidebar>
-          <TabContext value={value}>
-            <Box sx={{
-              borderBottom: 1,
-              borderColor: 'divider',
-              display: "flex",
-              justifyContent: "center",
-              top: "10px",
-              height: 45,
-              left: "15%",
+      <>
+        <Sidebar
+            rtl={rtl}
+            breakPoint="md"
+            backgroundColor={hexToRgba(themes[theme].sidebar.backgroundColor, 1)}
+            rootStyles={{
+              color: themes[theme].sidebar.color,
+              width: "380px",
               position: "absolute",
-              zIndex: 3
-            }}>
-              <TabList onChange={changeTab} aria-label="lab API tabs example">
-                <Tab label="Company" value="company"/>
-                <Tab label="Person" value="person"/>
-              </TabList>
-            </Box>
-            <TabPanel value="company">
-              <Paper
-                  component="form"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    width: "30%",
-                    height: 45,
-                    position: "absolute",
-                    left: "40%",
-                    top: 0,
-                    transform: "translate(-40%, 40%)",
-                    zIndex: 3
-                  }}>
-                <InputBase
-                    sx={{ml: 1, flex: 1, zIndex: 3}}
-                    placeholder="Enter a company name"
-                    value={query}
-                    onChange={handleChange}
-                />
-                <IconButton type="button" sx={{
-                  ml: 1,
-                  "&.MuiButtonBase-root:hover": {
-                    bgcolor: "transparent"
-                  }, backgroundColor: 'transparent', p: '5px', align: "center"
-                }} aria-label="search">
-                  <Divider sx={{height: 40, m: 0.5}} orientation="vertical"/>
-                  <SearchIcon
-                      onClick={() => searchClick()}
-                      sx={{marginLeft: '12px', width: 55, height: 40}}/>
-                </IconButton>
-              </Paper>
-            </TabPanel>
-            <TabPanel value="person">
-              <Paper
-                  component="form"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    width: "30%",
-                    height: 45,
-                    position: "absolute",
-                    left: "40%",
-                    top: 0,
-                    transform: "translate(-40%, 40%)",
-                    zIndex: 3
-                  }}>
-                <InputBase
-                    sx={{ml: 1, flex: 1, zIndex: 3}}
-                    value={query}
-                    onChange={handleChange}
-                    placeholder="Enter a person name"
-                />
-                <IconButton type="button" sx={{
-                  ml: 1,
-                  "&.MuiButtonBase-root:hover": {
-                    bgcolor: "transparent"
-                  }, backgroundColor: 'transparent', p: '5px', align: "center"
-                }} aria-label="search">
-                  <Divider sx={{height: 40, m: 0.5}} orientation="vertical"/>
-                  <SearchIcon
-                      onClick={() => searchClick()}
-                      sx={{marginLeft: '12px', width: 55, height: 40}}/>
-                </IconButton>
-              </Paper>
-            </TabPanel>
-          </TabContext>
-          {report !== 'company' && <PDFViewer fileName="report.pdf" style={{justifyContent: "center", display: 'flex', position: 'absolute', height: "100%", left: "20%", zIndex: 30, width: "70%",  display: `${openDocument ? 'block' : 'none'}`}}>
-            <Document  title={companyData[count].name}>
-              {reports.map((item) => (
-                  <Page size="A4" style={styles.page}>
-                    <View style={styles.section}>
-                      <Text>{item}</Text>
-                    </View>
-                  </Page>
-              ))}
-            </Document>
-          </PDFViewer>
-          }
-          <IconButton
-              onClick={() => setOpenDocument(false)}
-              sx={{color: "white", paddingInlineStart:0, justifyContent: "center", alignItems: "center", display: 'flex', position: 'absolute', left: "84.3%", marginTop:"10px", zIndex: 30, display: `${openDocument ? 'block' : 'none'}`}}>
-            <LuX />
-          </IconButton>
-          <Grid container xs={8}
-                sx={{justifyContent: "center", display: 'flex', position: "absolute", left: "40%", top: "13%"}}>
-            <Badge badgeContent={count} color="primary">
-              <Button variant="outlined" color="secondary"
-                      size="large"
-                     onClick={() => setOpenDocument(true)}>
-                Your Report
-              </Button>
-            </Badge>
-          </Grid>
+              height: "800px"
+            }}
+        >
+          <Menu menuItemStyles={menuItemStyles}>
+            <SubMenu label="Categories">
+              <MenuItem
+                  active={currentView === 'news'} onClick={() => setCurrentView('news')}
+                  suffix={
+                    <Badge variant="danger" shape="circle">
+                      {negativeNews.length}
+                    </Badge>
+                  }> Negative News </MenuItem>
+              <MenuItem
+                  suffix={
+                    <Badge variant="danger" shape="circle">
+                      {companyData.length}
+                    </Badge>
+                  }
+                  active={currentView === 'profile'} onClick={() => setCurrentView('profile')}> Company
+                Sources </MenuItem>
+              <MenuItem
+                  suffix={
+                    <Badge variant="danger" shape="circle">
+                      {openSanctions.length}
+                    </Badge>
+                  } active={currentView === 'sanctions'} onClick={() => setCurrentView('sanctions')}> Sanctions &
+                Watchlists </MenuItem>
+              <MenuItem active={currentView === 'exposed'} onClick={() => setCurrentView('exposed')}> Politically
+                Exposed Persons </MenuItem>
+              <MenuItem active={currentView === 'legal'} onClick={() => setCurrentView('legal')}> Legal
+                Sources </MenuItem>
+            </SubMenu>
+            <SubMenu label="Search Within Results">
+            </SubMenu>
+            <SubMenu label="Date Range">
 
-          <Grid container xs={6}
-                sx={{justifyContent: "center", display: 'flex', position: "absolute", left: "20%", top: "13%"}}>
-            {currentView === 'profile' && <Typography sx={{ textAlign: "center",
-              alignItems: "center",
-              display: "flex",
-              justifyContent: "center",
-              position: "absolute",
-              left: "14%",
-              marginTop: "0px"
-            }}><Checkbox
-                checked={isItemChecked}
-                onClick={(e) => {selectAll(e)}}
-                inputProps={{ 'aria-label': 'controlled' }}
-            />
-            </Typography>
-            }
-            {currentView === 'news' && <Typography sx={{ textAlign: "center",
-              alignItems: "center",
-              display: "flex",
-              justifyContent: "center",
-              position: "absolute",
-              left: "14%",
-              marginTop: "0px"
-            }}><Checkbox
-              checked={isItemChecked}
-              onClick={(e) => {selectAllNews(e)}}
-              inputProps={{ 'aria-label': 'controlled' }}
-              />
-              </Typography>
-            }
-            {currentView === 'sanctions' && <Typography sx={{ textAlign: "center",
-              alignItems: "center",
-              display: "flex",
-              justifyContent: "center",
-              position: "absolute",
-              left: "14%",
-              marginTop: "0px"
-            }}><Checkbox
-              checked={isItemChecked}
-              onClick={(e) => {selectAllOpenSanctions(e)}}
-              inputProps={{ 'aria-label': 'controlled' }}
-              />
-              </Typography>
-            }
+            </SubMenu>
+            <SubMenu label="Company">
 
-            <LuDownload style={{cursor: "pointer", zIndex: 4, width: 100, height: 25}}/>
-            <LuPrinter style={{cursor: "pointer", zIndex: 4, width: 100, height: 25}}/>
-            <LuMail style={{cursor: "pointer", zIndex: 4, width: 100, height: 25}}/>
-          </Grid>
-          <Divider sx={{width: "50%", my: 2, left: "25%", top: "17%", position: "absolute"}}/>
-          {currentView === 'profile' && companyData.map((item, index) => (
-              <Box sx={{flexGrow: 1}}>
-                  <Typography sx={{ textAlign: "center",
-                      alignItems: "center",
-                      display: "flex",
-                       gap: "8px",
-                      justifyContent: "center",
-                      position: "absolute",
-                      left: "27%",
-                      marginTop: "30px"
-                  }}><Checkbox
-                      checked={reports.includes(item.name)}
-                      onClick={(e) => {selectCompany(e, index)}}
-                      inputProps={{ 'aria-label': 'controlled' }}
-                  />
-                      <h3>{index + 1 + "."}</h3>
-                  </Typography>
-                <Grid container spacing={3} sx={{
-                  justifyContent: "center",
-                  marginTop: 0,
+            </SubMenu>
+            <SubMenu label="Source Type">
+
+            </SubMenu>
+            <SubMenu label="Source">
+
+            </SubMenu>
+          </Menu>
+        </Sidebar>
+        <TabContext value={value}>
+          <Box sx={{
+            borderBottom: 1,
+            borderColor: 'divider',
+            display: "flex",
+            justifyContent: "center",
+            top: "10px",
+            height: 45,
+            left: "15%",
+            position: "absolute",
+            zIndex: 3
+          }}>
+            <TabList onChange={changeTab} aria-label="lab API tabs example">
+              <Tab label="Company" value="company" sx={
+                {"&.MuiButtonBase-root": {color: "white"}}}/>
+              <Tab label="Person" value="person"
+                   sx={{
+                     "&.MuiButtonBase-root": {
+                       color: "white"
+                     }
+                   }}/>
+            </TabList>
+          </Box>
+          <TabPanel sx={{padding: 0}} value="company">
+            <Paper
+                component="form"
+                sx={{
                   display: 'flex',
-                  position: "relative",
-                  left: 0,
-                  top: 0
+                  alignItems: 'center',
+                  width: "30%",
+                  height: 45,
+                  padding: 0,
+                  position: "absolute",
+                  left: "40%",
+                  top: 0,
+                  transform: "translate(-40%, 40%)",
+                  zIndex: 3
                 }}>
-                  <Grid item xs={6} md={4}>
-                    <Grid item sx={{justifyContent: "center"}}>
-                      <Card sx={{textAlign: "center"}}>
-                        <CardContent sx={{padding: "48px"}}>
-                          <Box
-                              marginTop={"24px"}>
-                            {item.name}
-                          </Box>
-                          <Typography
-                              display={"flex"}
-                              fontWeight={600}
-                              color={"grey.600"}
-                              marginTop={"24px"}
-                          >
-                            Address:
-                            <Typography marginLeft={"8px"} variant="body1">
-                              {item.registered_address_in_full ? item.registered_address_in_full : ""}
-                            </Typography>
+              <InputBase
+                  sx={{ml: 1, flex: 1, zIndex: 3}}
+                  placeholder="Enter a company name"
+                  value={query}
+                  onChange={handleChange}
+              />
+              <IconButton type="button" sx={{
+                ml: 1,
+                "&.MuiButtonBase-root:hover": {
+                  bgcolor: "transparent"
+                }, backgroundColor: 'transparent', p: '5px', align: "center"
+              }} aria-label="search">
+                <Divider sx={{height: 40, m: 0.5}} orientation="vertical"/>
+                <SearchIcon
+                    onClick={() => searchClick()}
+                    sx={{marginLeft: '12px', width: 55, height: 40}}/>
+              </IconButton>
+            </Paper>
+          </TabPanel>
+          <TabPanel value="person">
+            <Paper
+                component="form"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: "30%",
+                  height: 45,
+                  padding: 0,
+                  position: "absolute",
+                  left: "40%",
+                  top: 0,
+                  transform: "translate(-40%, 40%)",
+                  zIndex: 3
+                }}>
+              <InputBase
+                  sx={{ml: 1, flex: 1, zIndex: 3}}
+                  value={query}
+                  onChange={handleChange}
+                  placeholder="Enter a person name"
+              />
+              <IconButton type="button" sx={{
+                ml: 1,
+                "&.MuiButtonBase-root:hover": {
+                  bgcolor: "transparent"
+                }, backgroundColor: 'transparent', p: '5px', align: "center"
+              }} aria-label="search">
+                <Divider sx={{height: 40, m: 0.5}} orientation="vertical"/>
+                <SearchIcon
+                    onClick={() => searchClick()}
+                    sx={{marginLeft: '12px', width: 55, height: 40}}/>
+              </IconButton>
+            </Paper>
+          </TabPanel>
+        </TabContext>
+        {report !== 'company' && <PDFViewer fileName="report.pdf" style={{
+          justifyContent: "center",
+          display: 'flex',
+          position: 'absolute',
+          height: "100%",
+          left: "20%",
+          zIndex: 400,
+          width: "70%",
+          display: `${openDocument ? 'block' : 'none'}`
+        }}>
+          <Document title={companyData[count].name}>
+            {reports.map((item) => (
+                <Page size="A4" style={styles.page}>
+                  <View style={styles.section}>
+                    <Text>{item}</Text>
+                  </View>
+                </Page>
+            ))}
+          </Document>
+        </PDFViewer>
+        }
+        <IconButton
+            onClick={() => setOpenDocument(false)}
+            sx={{
+              color: "white",
+              paddingInlineStart: 0,
+              justifyContent: "center",
+              alignItems: "center",
+              display: 'flex',
+              position: 'relative',
+              left: "80.6%",
+              marginTop: "11px",
+              zIndex: 400,
+              display: `${openDocument ? 'block' : 'none'}`
+            }}>
+          <LuX/>
+        </IconButton>
+        <Box
+            sx={{justifyContent: "center", display: 'flex', position: "absolute", left: "70%", top: "12%"}}>
+          <Badge badgeContent={count} color="primary">
+            <Button variant="outlined" color="secondary"
+                    size="large"
+                    onClick={() => setOpenDocument(true)}
+                    sx={{width: "180px", height: "40px", border: "2px solid black", color: "black"}}>
+              Your Report
+            </Button>
+          </Badge>
+        </Box>
+
+        <Box
+            sx={{justifyContent: "center", display: 'flex', position: "absolute", left: "40%", top: "13%"}}>
+          {currentView === 'profile' && <Typography sx={{
+            textAlign: "center",
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
+            position: "absolute",
+            left: "-198px",
+            marginTop: "0px"
+          }}><Checkbox
+              checked={isItemChecked}
+              onClick={(e) => {
+                selectAll(e)
+              }}
+              inputProps={{'aria-label': 'controlled'}}
+          />
+          </Typography>
+          }
+          {currentView === 'news' && <Typography sx={{
+            textAlign: "center",
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
+            position: "absolute",
+            left: "14%",
+            marginTop: "0px"
+          }}><Checkbox
+              checked={isItemChecked}
+              onClick={(e) => {
+                selectAllNews(e)
+              }}
+              inputProps={{'aria-label': 'controlled'}}
+          />
+          </Typography>
+          }
+          {currentView === 'sanctions' && <Typography sx={{
+            textAlign: "center",
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
+            position: "absolute",
+            left: "14%",
+            marginTop: "0px"
+          }}><Checkbox
+              checked={isItemChecked}
+              onClick={(e) => {
+                selectAllOpenSanctions(e)
+              }}
+              inputProps={{'aria-label': 'controlled'}}
+          />
+          </Typography>
+          }
+
+          <LuDownload style={{cursor: "pointer", zIndex: 4, width: 100, height: 25, color:"grey"}}/>
+          <Divider sx={{height: 70, m: 0.5}} orientation="vertical"/>
+          <LuPrinter style={{cursor: "pointer", zIndex: 4, width: 100, height: 25, color:"grey"}}/>
+          <Divider sx={{height: 70, m: 0.5}} orientation="vertical"/>
+          <LuMail style={{cursor: "pointer", zIndex: 4, width: 100, height: 25, color:"grey"}}/>
+        </Box>
+        {currentView === 'profile' && companyData.map((item, index) => (
+            <Box sx={{flexGrow: 1, backgroundColor: "#f2f4f7"}}>
+              <Typography sx={{
+                textAlign: "center",
+                alignItems: "center",
+                display: "flex",
+                gap: "8px",
+                justifyContent: "center",
+                position: "absolute",
+                left: "27%",
+                marginTop: "90px",
+                zIndex: 300
+              }}><Checkbox
+                  checked={reports.includes(item.name)}
+                  onClick={(e) => {
+                    selectCompany(e, index)
+                  }}
+                  inputProps={{'aria-label': 'controlled'}}
+              />
+                <h3 style={{
+                  color:"grey"
+                }}>{index + 1 + "."}</h3>
+              </Typography>
+              <Grid container spacing={3} sx={{
+                justifyContent: "center",
+                marginTop: 0,
+                display: 'flex',
+                position: "relative",
+                left: 0,
+                top: "60px",
+                backgroundColor: "#f2f4f7"
+              }}>
+                <Grid item xs={6} md={4}>
+                  <Grid item sx={{justifyContent: "center"}}>
+                    <Card sx={{textAlign: "center"}}>
+                      <CardContent sx={{padding: "48px"}}>
+                        <Box
+                            marginTop={"24px"}>
+                          {item.name}
+                        </Box>
+                        <Typography
+                            display={"flex"}
+                            fontWeight={600}
+                            color={"grey.600"}
+                            marginTop={"24px"}
+                        >
+                          Address:
+                          <Typography marginLeft={"8px"} variant="body1">
+                            {item.registered_address_in_full ? item.registered_address_in_full : ""}
                           </Typography>
-                          <Typography
-                              display={"flex"}
-                              fontWeight={600}
-                              color={"grey.600"}
-                          >
-                            Registration Number:
-                            <Typography marginLeft={"8px"} variant="body1">
-                              {item.company_number}
-                            </Typography>
+                        </Typography>
+                        <Typography
+                            display={"flex"}
+                            fontWeight={600}
+                            color={"grey.600"}
+                        >
+                          Registration Number:
+                          <Typography marginLeft={"8px"} variant="body1">
+                            {item.company_number}
                           </Typography>
-                          <Typography
-                              display={"flex"}
-                              fontWeight={600}
-                              color={"grey.600"}
-                          >
-                            SIC(Cod Caen):
-                            <Typography marginLeft={"8px"} variant="body1">
-                              {item.industry_codes.length > 0 &&
+                        </Typography>
+                        <Typography
+                            display={"flex"}
+                            fontWeight={600}
+                            color={"grey.600"}
+                        >
+                          SIC(Cod Caen):
+                          <Typography marginLeft={"8px"} variant="body1">
+                            {item.industry_codes.length > 0 &&
                                 item.industry_codes.map((val) => (
                                     <Typography variant="body1">
-                                       {val.industry_code.code}
+                                      {val.industry_code.code}
                                     </Typography>
                                 ))}
-                            </Typography>
                           </Typography>
-                          <Typography
-                              display={"flex"}
-                              fontWeight={600}
-                              color={"grey.600"}
+                        </Typography>
+                        <Typography
+                            display={"flex"}
+                            fontWeight={600}
+                            color={"grey.600"}
+                        >
+                          Date of Incorporation:
+                          <Typography marginLeft={"8px"} variant="body1">
+                            {item.incorporation_date ? item.incorporation_date : ""}
+                          </Typography>
+                        </Typography>
+                        <Typography
+                            display={"flex"}
+                            fontWeight={600}
+                            color={"grey.600"}
+                        >
+                          Status:
+                          <Typography marginLeft={"8px"} variant="body1">
+                            {item.current_status ? item.current_status : ""}
+                          </Typography>
+                        </Typography>
+                        <Typography
+                            display={"flex"}
+                            fontWeight={600}
+                            color={"grey.600"}
+                        >
+                          Jurisdiction:
+                          <Typography marginLeft={"8px"} variant="body1">
+                            {item.jurisdiction_code[Object.keys(item.jurisdiction_code)].country}
+                          </Typography>
+                        </Typography>
+                        <Box textAlign={"start"} marginTop={"24px"}>
+                          <Button sx={{position: "absolute", zIndex: 3, left: "58%", top: "55%"}}
+                                  onClick={() => handleOpen(index)}
+                                  className="project-card card p-0 border-5 border-dark shadow-lg">
+                            Preview
+                          </Button>
+                          <Button variant="outlined" color="secondary"
+                                  sx={{position: "absolute", zIndex: 3, left: "55%", top: "15%", border: "2px solid black", color: "black"}}
+                                  onClick={() => addReport(item.name)}
+                                  className="project-card card p-0 border-5 border-dark shadow-lg">
+                            <Plus style={{marginRight: "6px"}}/> Add to Report
+                          </Button>
+                          <BootstrapDialog
+                              TransitionComponent={Transition}
+                              aria-labelledby="customized-dialog-title"
+                              open={open === index}
+                              onClose={handleClose}
                           >
-                            Date of Incorporation:
-                            <Typography marginLeft={"8px"} variant="body1">
-                              {item.incorporation_date ? item.incorporation_date : ""}
-                            </Typography>
-                          </Typography>
-                          <Typography
-                              display={"flex"}
-                              fontWeight={600}
-                              color={"grey.600"}
-                          >
-                            Status:
-                            <Typography marginLeft={"8px"} variant="body1">
-                              {item.current_status ? item.current_status : ""}
-                            </Typography>
-                          </Typography>
-                          <Typography
-                              display={"flex"}
-                              fontWeight={600}
-                              color={"grey.600"}
-                          >
-                            Jurisdiction:
-                            <Typography marginLeft={"8px"} variant="body1">
-                               {item.jurisdiction_code[Object.keys(item.jurisdiction_code)].country}
-                            </Typography>
-                          </Typography>
-                          <Box textAlign={"start"} marginTop={"24px"}>
-                            <Button sx={{position: "absolute", zIndex: 3, left: "60%", top: "50%"}}
-                                    onClick={() => handleOpen(index)}
-                                    className="project-card card p-0 border-5 border-dark shadow-lg">
-                              Preview
-                            </Button>
-                            <Button variant="outlined" color="secondary"
-                                    sx={{position: "absolute", zIndex: 3, left: "58%", top: "20%"}}
-                                    onClick={() => addReport(item.name)}
-                                    className="project-card card p-0 border-5 border-dark shadow-lg">
-                              <Plus style={{marginRight: "6px"}}/> Add to Report
-                            </Button>
-                            <BootstrapDialog
-                                aria-labelledby="customized-dialog-title"
-                                open={open === index}
-                                onClose={handleClose}
-                            >
-                              <DialogContent dividers sx={{width: "800px"}}>
-                                <Button variant="outlined" color="secondary"
-                                        onClick={() => addReport(item.name)}
-                                        className="project-card card p-0 border-5 border-dark shadow-lg">
-                                  <Plus style={{marginRight: "6px"}}/> Add to Report
-                                </Button>
-                                <h1 style={{
-                                  textAlign: "center",
-                                  alignItems: "center",
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  top: "0"
-                                }}>
+                            <DialogContent dividers sx={{width: "800px"}}>
+                              <Button variant="outlined" color="secondary"
+                                      onClick={() => addReport(item.name)}
+                                      className="project-card card p-0 border-5 border-dark shadow-lg">
+                                <Plus style={{marginRight: "6px"}}/> Add to Report
+                              </Button>
+                              <h1 style={{
+                                textAlign: "center",
+                                alignItems: "center",
+                                display: "flex",
+                                justifyContent: "center",
+                                top: "0"
+                              }}>
+                                {item.name}
+                              </h1>
+                              <Typography marginLeft={"8px"} variant="body1">
+                                {item.name.toUpperCase()}
+                              </Typography>
+                              <Typography marginLeft={"8px"} variant="body1">
+                                {item.company_number}
+                              </Typography>
+                              <Typography marginLeft={"8px"} variant="body1">
+                                {item.registered_address_in_full ? item.registered_address_in_full.toUpperCase() : ""}
+                              </Typography>
+                              <Typography marginLeft={"8px"} variant="body1">
+                                {item.registered_address ? item.registered_address.country.toUpperCase() : ""}
+                              </Typography>
+                              <Typography marginLeft={"8px"} variant="body1">
+                                {item.jurisdiction_code.name}
+                              </Typography>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Communications
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                                  marginTop={"10px"}
+                              >
+                                Website:
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  <Link href={item.source.url} variant="body2">
+                                    {item.opencorporates_url}
+                                  </Link>
+                                </Typography>
+                              </Typography>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Company Identifiers
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                                  marginTop={"10px"}
+                              >
+                                Ticker:
+                                <Typography marginLeft={"8px"} variant="body1">
                                   {item.name}
-                                </h1>
+                                </Typography>
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                IRS No:
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                CIK:
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                Reuters Instrument Code:
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                Display RIC:
+                              </Typography>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Company Information
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                                  marginTop={"10px"}
+                              >
+                                Incorporation Date:
                                 <Typography marginLeft={"8px"} variant="body1">
-                                  {item.name.toUpperCase()}
+                                  {item.incorporation_date}
                                 </Typography>
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                Place Of Incorporation/Registration:
                                 <Typography marginLeft={"8px"} variant="body1">
-                                  {item.company_number}
+                                  {item.registered_address ? item.registered_address.region : ""}
                                 </Typography>
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                Legal Status:
+
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                Operating Status:
                                 <Typography marginLeft={"8px"} variant="body1">
-                                  {item.registered_address_in_full ? item.registered_address_in_full.toUpperCase() : ""}
+                                  {item.current_status ? item.current_status : ""}
                                 </Typography>
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                Employees:
                                 <Typography marginLeft={"8px"} variant="body1">
-                                  {item.registered_address ? item.registered_address.country.toUpperCase() : ""}
+                                  {item.current_status ? item.current_status : ""}
                                 </Typography>
+                              </Typography>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Description
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                                  marginTop={"10px"}
+                              >
+                                Company type:
                                 <Typography marginLeft={"8px"} variant="body1">
-                                  {item.jurisdiction_code.name}
+                                  {item.company_type ? item.company_type : ""}
                                 </Typography>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Communications
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                    marginTop={"10px"}
-                                >
-                                  Website:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    <Link href={item.source.url} variant="body2">
-                                      {item.opencorporates_url}
-                                    </Link>
-                                  </Typography>
+                              </Typography>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Market and Industry
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                                  marginTop={"10px"}
+                              >
+                                NAICS Codes:
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  33660
                                 </Typography>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Company Identifiers
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                    marginTop={"10px"}
-                                >
-                                  Ticker:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {item.name}
-                                  </Typography>
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                SIC Codes:
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  {item.industry_codes.length > 0 &&
+                                      item.industry_codes.map((val) => (
+                                          <Typography marginLeft={"8px"} variant="body1">
+                                            {val.industry_code.code}
+                                          </Typography>
+                                      ))}
                                 </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  IRS No:
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  CIK:
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  Reuters Instrument Code:
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  Display RIC:
-                                </Typography>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Company Information
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                    marginTop={"10px"}
-                                >
-                                  Incorporation Date:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {item.incorporation_date}
-                                  </Typography>
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  Place Of Incorporation/Registration:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {item.registered_address ? item.registered_address.region : ""}
-                                  </Typography>
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  Legal Status:
-
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  Operating Status:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {item.current_status ? item.current_status : ""}
-                                  </Typography>
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  Employees:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {item.current_status ? item.current_status : ""}
-                                  </Typography>
-                                </Typography>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Description
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                    marginTop={"10px"}
-                                >
-                                  Company type:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {item.company_type ? item.company_type : ""}
-                                  </Typography>
-                                </Typography>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Market and Industry
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                    marginTop={"10px"}
-                                >
-                                  NAICS Codes:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    33660
-                                  </Typography>
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  SIC Codes:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {item.industry_codes.length > 0 &&
-                                        item.industry_codes.map((val) => (
-                                            <Typography marginLeft={"8px"} variant="body1">
-                                              {val.industry_code.code}
-                                            </Typography>
-                                        ))}
-                                  </Typography>
-                                </Typography>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Financials
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Income Statement
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Classification
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                    marginTop={"10px"}
-                                >
-                                  Company:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {item.name}
-                                  </Typography>
-                                </Typography>
-                              </DialogContent>
-
-                            </BootstrapDialog>
-                          </Box>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-
-                  </Grid>
-
-                </Grid>
-
-
-              </Box>
-          ))}
-
-          {currentView === 'news' && negativeNews.map((item, index) => (
-              <Box sx={{flexGrow: 1}}>
-                  <Typography sx={{ textAlign: "center",
-                      alignItems: "center",
-                      display: "flex",
-                      justifyContent: "center",
-                      position: "absolute",
-                      left: "27%",
-                      marginTop: "30px"
-                  }}><Checkbox
-                      checked={reports.includes(item.title)}
-                      onClick={(e) => {selectCompany(e, index)}}
-                      inputProps={{ 'aria-label': 'controlled' }}
-                  />
-                      <h3>{index + 1 + "."}</h3>
-                  </Typography>
-                <Grid container spacing={3} sx={{
-                  justifyContent: "center",
-                  marginTop: 0,
-                  display: 'flex',
-                  position: "relative",
-                  left: 0,
-                  top: 0
-                }}>
-                  <Grid item xs={5}>
-                    <Grid item sx={{justifyContent: "center"}}>
-                      <Card sx={{textAlign: "start"}}>
-                        <CardContent sx={{padding: "48px"}}>
-                          <Box
-                              marginTop={"24" +
-                                  "px"}>
-                            {item.snippet}
-                          </Box>
-                          <Box textAlign={"start"} marginTop={"24px"}>
-                            <Button sx={{position: "absolute", zIndex: 3, left: "60%", top: "58%"}}
-                                    onClick={() => handleOpen(index)}
-                                    className="project-card card p-0 border-5 border-dark shadow-lg">
-                              Preview
-                            </Button>
-                            <Button variant="outlined" color="secondary"
-                                    sx={{position: "absolute", zIndex: 3, left: "58%", top: "20%"}}
-                                    onClick={() => addReport(item.name)}
-                                    className="project-card card p-0 border-5 border-dark shadow-lg">
-                              <Plus style={{marginRight: "6px"}}/> Add to Report
-                            </Button>
-                            <BootstrapDialog
-                                aria-labelledby="customized-dialog-title"
-                                open={open === index}
-                                onClose={handleClose}
-                            >
-                              <DialogContent dividers sx={{width: "800px"}}>
-                                <Button variant="outlined" color="secondary"
-                                        sx={{    textAlign: "center",
-                                          alignItems: "center",
-                                          display: "flex",
-                                          justifyContent: "center",
-                                          top: "0"}}
-                                        onClick={() => addReport(item.name)}
-                                        className="project-card card p-0 border-5 border-dark shadow-lg">
-                                  <Plus style={{marginRight: "6px"}}/> Add to Report
-                                </Button>
-                                <h1 style={{
-                                  textAlign: "center",
-                                  alignItems: "center",
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  top: "0"
-                                }}>
+                              </Typography>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Financials
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Income Statement
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Classification
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                                  marginTop={"10px"}
+                              >
+                                Company:
+                                <Typography marginLeft={"8px"} variant="body1">
                                   {item.name}
-                                </h1>
-                                <Typography marginLeft={"8px"} variant="body1">
-                                  {item.title.toUpperCase()}
                                 </Typography>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Communications
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                    marginTop={"10px"}
-                                >
-                                  Website:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    <Link href={item.link} variant="body2">
-                                      {item.link}
-                                    </Link>
-                                  </Typography>
-                                </Typography>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Company Identifiers
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                    marginTop={"10px"}
-                                >
-                                  Ticker:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {item.name}
-                                  </Typography>
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  IRS No:
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  CIK:
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  Reuters Instrument Code:
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  Display RIC:
-                                </Typography>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Company Information
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                    marginTop={"10px"}
-                                >
-                                  Incorporation Date:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {item.incorporation_date}
-                                  </Typography>
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  Place Of Incorporation/Registration:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {item.registered_address ? item.registered_address.region : ""}
-                                  </Typography>
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  Legal Status:
+                              </Typography>
+                            </DialogContent>
 
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  Operating Status:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {item.current_status ? item.current_status : ""}
-                                  </Typography>
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  Employees:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {item.current_status ? item.current_status : ""}
-                                  </Typography>
-                                </Typography>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Description
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                    marginTop={"10px"}
-                                >
-                                  Company type:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {item.company_type ? item.company_type : ""}
-                                  </Typography>
-                                </Typography>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Market and Industry
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                    marginTop={"10px"}
-                                >
-                                  NAICS Codes:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    33660
-                                  </Typography>
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                >
-                                  SIC Codes:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    3711
-                                  </Typography>
-                                </Typography>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Financials
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Income Statement
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Classification
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                    marginTop={"10px"}
-                                >
-                                  Company:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {item.name}
-                                  </Typography>
-                                </Typography>
-                              </DialogContent>
-
-                            </BootstrapDialog>
-                          </Box>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-
+                          </BootstrapDialog>
+                        </Box>
+                      </CardContent>
+                    </Card>
                   </Grid>
 
                 </Grid>
 
+              </Grid>
 
-              </Box>
-          ))}
-          {currentView === 'sanctions' && openSanctions.map((item, index) => (
-              <Box sx={{flexGrow: 1}}>
-                  <Typography sx={{ textAlign: "center",
-                      alignItems: "center",
-                      display: "flex",
-                      justifyContent: "center",
-                      position: "absolute",
-                      left: "27%",
-                      marginTop: "30px"
-                  }}><Checkbox
-                      checked={reports.includes(item.caption)}
-                      onClick={(e) => {selectCompany(e, index)}}
-                      inputProps={{ 'aria-label': 'controlled' }}
+
+            </Box>
+        ))}
+
+        {currentView === 'news' && negativeNews.map((item, index) => (
+            <Box sx={{flexGrow: 1, backgroundColor: "#f2f4f7"}}>
+              <Typography sx={{
+                textAlign: "center",
+                alignItems: "center",
+                display: "flex",
+                justifyContent: "center",
+                position: "absolute",
+                left: "27%",
+                marginTop: "50px"
+              }}><Checkbox
+                  checked={reports.includes(item.title)}
+                  onClick={(e) => {
+                    selectCompany(e, index)
+                  }}
+                  inputProps={{'aria-label': 'controlled'}}
+              />
+                <h3>{index + 1 + "."}</h3>
+              </Typography>
+              <Grid container spacing={3} sx={{
+                justifyContent: "center",
+                marginTop: 0,
+                display: 'flex',
+                position: "relative",
+                left: 0,
+                top: 0
+              }}>
+                <Grid item xs={5}>
+                  <Grid item sx={{justifyContent: "center"}}>
+                    <Card sx={{textAlign: "start"}}>
+                      <CardContent sx={{padding: "48px"}}>
+                        <Box
+                            marginTop={"24" +
+                                "px"}>
+                          {item.snippet}
+                        </Box>
+                        <Box textAlign={"start"} marginTop={"24px"}>
+                          <Button sx={{position: "absolute", zIndex: 3, left: "60%", top: "58%"}}
+                                  onClick={() => handleOpen(index)}
+                                  className="project-card card p-0 border-5 border-dark shadow-lg">
+                            Preview
+                          </Button>
+                          <Button variant="outlined" color="secondary"
+                                  sx={{position: "absolute", zIndex: 3, left: "58%", top: "20%"}}
+                                  onClick={() => addReport(item.title)}
+                                  className="project-card card p-0 border-5 border-dark shadow-lg">
+                            <Plus style={{marginRight: "6px"}}/> Add to Report
+                          </Button>
+                          <BootstrapDialog
+                              aria-labelledby="customized-dialog-title"
+                              open={open === index}
+                              onClose={handleClose}
+                          >
+                            <DialogContent dividers sx={{width: "800px"}}>
+                              <Button variant="outlined" color="secondary"
+                                      sx={{
+                                        textAlign: "center",
+                                        alignItems: "center",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        top: "0"
+                                      }}
+                                      onClick={() => addReport(item.name)}
+                                      className="project-card card p-0 border-5 border-dark shadow-lg">
+                                <Plus style={{marginRight: "6px"}}/> Add to Report
+                              </Button>
+                              <h1 style={{
+                                textAlign: "center",
+                                alignItems: "center",
+                                display: "flex",
+                                justifyContent: "center",
+                                top: "0"
+                              }}>
+                                {item.name}
+                              </h1>
+                              <Typography marginLeft={"8px"} variant="body1">
+                                {item.title.toUpperCase()}
+                              </Typography>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Communications
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                                  marginTop={"10px"}
+                              >
+                                Website:
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  <Link href={item.link} variant="body2">
+                                    {item.link}
+                                  </Link>
+                                </Typography>
+                              </Typography>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Company Identifiers
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                                  marginTop={"10px"}
+                              >
+                                Ticker:
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  {item.name}
+                                </Typography>
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                IRS No:
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                CIK:
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                Reuters Instrument Code:
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                Display RIC:
+                              </Typography>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Company Information
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                                  marginTop={"10px"}
+                              >
+                                Incorporation Date:
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  {item.incorporation_date}
+                                </Typography>
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                Place Of Incorporation/Registration:
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  {item.registered_address ? item.registered_address.region : ""}
+                                </Typography>
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                Legal Status:
+
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                Operating Status:
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  {item.current_status ? item.current_status : ""}
+                                </Typography>
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                Employees:
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  {item.current_status ? item.current_status : ""}
+                                </Typography>
+                              </Typography>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Description
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                                  marginTop={"10px"}
+                              >
+                                Company type:
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  {item.company_type ? item.company_type : ""}
+                                </Typography>
+                              </Typography>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Market and Industry
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                                  marginTop={"10px"}
+                              >
+                                NAICS Codes:
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  33660
+                                </Typography>
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                              >
+                                SIC Codes:
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  3711
+                                </Typography>
+                              </Typography>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Financials
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Income Statement
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Classification
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                                  marginTop={"10px"}
+                              >
+                                Company:
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  {item.name}
+                                </Typography>
+                              </Typography>
+                            </DialogContent>
+
+                          </BootstrapDialog>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+
+                </Grid>
+
+              </Grid>
+
+
+            </Box>
+        ))}
+        {currentView === 'sanctions' && openSanctions.map((item, index) => (
+            <Box sx={{flexGrow: 1, backgroundColor: "#f2f4f7"}}>
+              <Typography sx={{
+                textAlign: "center",
+                alignItems: "center",
+                display: "flex",
+                justifyContent: "center",
+                position: "absolute",
+                left: "27%",
+                marginTop: "30px"
+              }}><Checkbox
+                  checked={reports.includes(item.caption)}
+                  onClick={(e) => {
+                    selectCompany(e, index)
+                  }}
+                  inputProps={{'aria-label': 'controlled'}}
+              />
+
+                <h3>{index + 1 + "."}</h3>
+              </Typography>
+              <Grid container spacing={3} sx={{
+                justifyContent: "center",
+                marginTop: 0,
+                display: 'flex',
+                position: "relative",
+                left: 0,
+                top: 0
+              }}>
+                <Box sx={{position: "absolute", left: "-35%", top: "12%"}} width={"100%"}>
+                  <ReactApexChart
+                      className="apex-charts"
+                      options={basicRadialBarOpts}
+                      height={140}
+                      series={[item.score]}
+                      type="radialBar"
                   />
-                      <h3>{index + 1 + "."}</h3>
-                  </Typography>
-                <Grid container spacing={3} sx={{
-                  justifyContent: "center",
-                  marginTop: 0,
-                  display: 'flex',
-                  position: "relative",
-                  left: 0,
-                  top: 0
-                }}>
-                  <Box sx={{position: "absolute", left: "-35%",top: "12%"}} width={"100%"}>
-                    <ReactApexChart
-                        className="apex-charts"
-                        options={basicRadialBarOpts}
-                        height={140}
-                        series={[item.score]}
-                        type="radialBar"
-                    />
-                  </Box>
-                  <Grid item xs={5}>
-                    <Grid item sx={{justifyContent: "center"}}>
-                      <Card sx={{textAlign: "center"}}>
-                        <CardContent sx={{padding: "48px"}}>
+                </Box>
+                <Grid item xs={5}>
+                  <Grid item sx={{justifyContent: "center"}}>
+                    <Card sx={{textAlign: "center"}}>
+                      <CardContent sx={{padding: "48px"}}>
 
-                          <Box
-                              marginTop={"24" +
-                                  "px"}>
-                            {item.caption}
-                          </Box>
-                          <Box textAlign={"start"} marginTop={"24px"}>
-                            <Button sx={{position: "absolute", zIndex: 3, left: "60%", top: "50%"}}
-                                    onClick={() => handleOpen(index)}
-                                    className="project-card card p-0 border-5 border-dark shadow-lg">
-                              Preview
-                            </Button>
-                            <Button variant="outlined" color="secondary"
-                                    sx={{position: "absolute", zIndex: 3, left: "58%", top: "20%"}}
-                                    onClick={() => addReport(item.name)}
-                                    className="project-card card p-0 border-5 border-dark shadow-lg">
-                              <Plus style={{marginRight: "6px"}}/> Add to Report
-                            </Button>
-                            <BootstrapDialog
-                                aria-labelledby="customized-dialog-title"
-                                open={open === index}
-                                onClose={handleClose}
-                            >
-                              <DialogContent dividers sx={{width: "800px"}}>
-                                <Button variant="outlined" color="secondary"
-                                        sx={{    textAlign: "center",
-                                          alignItems: "center",
-                                          display: "flex",
-                                          justifyContent: "center",
-                                          top: "0"}}
-                                        onClick={() => addReport(item.caption)}
-                                        className="project-card card p-0 border-5 border-dark shadow-lg">
-                                  <Plus style={{marginRight: "6px"}}/> Add to Report
-                                </Button>
-                                <h1 style={{
-                                  textAlign: "center",
-                                  alignItems: "center",
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  top: "0"
-                                }}>
-                                  {item.caption}
-                                </h1>
+                        <Box
+                            marginTop={"24" +
+                                "px"}>
+                          {item.caption}
+                        </Box>
+                        <Box textAlign={"start"} marginTop={"24px"}>
+                          <Button sx={{position: "absolute", zIndex: 3, left: "60%", top: "50%"}}
+                                  onClick={() => handleOpen(index)}
+                                  className="project-card card p-0 border-5 border-dark shadow-lg">
+                            Preview
+                          </Button>
+                          <Button variant="outlined" color="secondary"
+                                  sx={{position: "absolute", zIndex: 3, left: "58%", top: "20%"}}
+                                  onClick={() => addReport(item.caption)}
+                                  className="project-card card p-0 border-5 border-dark shadow-lg">
+                            <Plus style={{marginRight: "6px"}}/> Add to Report
+                          </Button>
+                          <BootstrapDialog
+                              aria-labelledby="customized-dialog-title"
+                              open={open === index}
+                              onClose={handleClose}
+                          >
+                            <DialogContent dividers sx={{width: "800px"}}>
+                              <Button variant="outlined" color="secondary"
+                                      sx={{
+                                        textAlign: "center",
+                                        alignItems: "center",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        top: "0"
+                                      }}
+                                      onClick={() => addReport(item.caption)}
+                                      className="project-card card p-0 border-5 border-dark shadow-lg">
+                                <Plus style={{marginRight: "6px"}}/> Add to Report
+                              </Button>
+                              <h1 style={{
+                                textAlign: "center",
+                                alignItems: "center",
+                                display: "flex",
+                                justifyContent: "center",
+                                top: "0"
+                              }}>
+                                {item.caption}
+                              </h1>
+                              <Typography marginLeft={"8px"} variant="body1">
+                                {item.company_number}
+                              </Typography>
+                              <Typography marginLeft={"8px"} variant="body1">
+                                {item.properties.address ? item.properties.address[0] : ""}
+                              </Typography>
+                              <Typography marginLeft={"8px"} variant="body1">
+                                {item.properties.swiftBic ? item.properties.swiftBic[0] : ""}
+                              </Typography>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Sanctions
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                                  marginTop={"10px"}
+                              >
+                                Country:
                                 <Typography marginLeft={"8px"} variant="body1">
-                                  {item.company_number}
+                                  {Object.keys(item.the_dot.datasets).length > 0 ? item.the_dot.datasets[item.datasets[0]].country : ""}
                                 </Typography>
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                                  marginTop={"10px"}
+                              >
+                                Name:
                                 <Typography marginLeft={"8px"} variant="body1">
-                                  {item.properties.address ? item.properties.address[0] : ""}
+                                  {Object.keys(item.the_dot.datasets).length > 0 ? item.the_dot.datasets[item.datasets[0]].name : ""}
                                 </Typography>
+                              </Typography>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                                  marginTop={"10px"}
+                              >
+                                Publisher:
                                 <Typography marginLeft={"8px"} variant="body1">
-                                  {item.properties.swiftBic ? item.properties.swiftBic[0] : ""}
+                                  {Object.keys(item.the_dot.datasets).length > 0 && item.the_dot.datasets[item.datasets[0]].publisher ? item.the_dot.datasets[item.datasets[0]].publisher : ""}
                                 </Typography>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Sanctions
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                    marginTop={"10px"}
-                                >
-                                  Country:
-                                    <Typography marginLeft={"8px"} variant="body1">
-                                      {Object.keys(item.the_dot.datasets).length > 0 ? item.the_dot.datasets[item.datasets[0]].country : ""}
-                                    </Typography>
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                    marginTop={"10px"}
-                                >
-                                  Name:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {Object.keys(item.the_dot.datasets).length > 0 ? item.the_dot.datasets[item.datasets[0]].name : ""}
-                                  </Typography>
-                                </Typography>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                    marginTop={"10px"}
-                                >
-                                  Publisher:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {Object.keys(item.the_dot.datasets).length > 0  && item.the_dot.datasets[item.datasets[0]].publisher ? item.the_dot.datasets[item.datasets[0]].publisher : ""}
-                                  </Typography>
-                                </Typography>
+                              </Typography>
 
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Description
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                                <Typography
-                                    display={"flex"}
-                                    fontWeight={600}
-                                    color={"black.600"}
-                                    marginTop={"10px"}
-                                >
-                                  Company type:
-                                  <Typography marginLeft={"8px"} variant="body1">
-                                    {item.schema ? item.schema : ""}
-                                  </Typography>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Description
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                              <Typography
+                                  display={"flex"}
+                                  fontWeight={600}
+                                  color={"black.600"}
+                                  marginTop={"10px"}
+                              >
+                                Company type:
+                                <Typography marginLeft={"8px"} variant="body1">
+                                  {item.schema ? item.schema : ""}
                                 </Typography>
-                                <h2 style={{
-                                  textAlign: "left",
-                                  display: "flex",
-                                  justifyContent: "left",
-                                  top: "0"
-                                }}>
-                                  Score
-                                </h2>
-                                <Divider sx={{
-                                  borderWidth: "3px",
-                                  borderColor: "black",
-                                  borderRadius: "30px",
-                                  marginTop: "-20px"
-                                }}/>
-                              </DialogContent>
+                              </Typography>
+                              <h2 style={{
+                                textAlign: "left",
+                                display: "flex",
+                                justifyContent: "left",
+                                top: "0"
+                              }}>
+                                Score
+                              </h2>
+                              <Divider sx={{
+                                borderWidth: "3px",
+                                borderColor: "black",
+                                borderRadius: "30px",
+                                marginTop: "-20px"
+                              }}/>
+                            </DialogContent>
 
-                            </BootstrapDialog>
-                          </Box>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-
+                          </BootstrapDialog>
+                        </Box>
+                      </CardContent>
+                    </Card>
                   </Grid>
 
                 </Grid>
 
+              </Grid>
 
-              </Box>
-          ))}
-        </>
-    );
+
+            </Box>
+        ))}
+      </>
+  );
 };
 
 export default Statistics;

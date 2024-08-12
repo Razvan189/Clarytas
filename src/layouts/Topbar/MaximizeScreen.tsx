@@ -50,7 +50,7 @@ const MaximizeScreen = () => {
   };
 
   return (
-    <IconButton color={"inherit"} onClick={toggleFullScreen}>
+    <IconButton sx={{color: "white"}} onClick={toggleFullScreen}>
       {fullScreenOn ? <LuMinimize /> : <LuMaximize />}
     </IconButton>
   );

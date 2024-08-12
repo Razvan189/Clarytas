@@ -91,14 +91,13 @@ export const Starter = () => {
 
     const add = () => {
         setArray([...array, dynamic]);
-        console.log(array)
     }
 
     const rotate = !showFilter ? "rotate(90deg)" : "rotate(-90deg)"
 
     return (
         <>
-            <Box sx={{typography: 'body1' }}>
+            <Box sx={{typography: 'body1', width: "100%", height: "100%", backgroundImage: "linear-gradient(to bottom, #046380, #004e75, #003967, #002456, #050d42)" }}>
                 <TabContext value={value}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider', display: "flex", justifyContent: "center", top: "20%", left: "50%", position: "absolute", transform: "translate(-50%, 50%)" }}>
                         <TabList onChange={changeTab} aria-label="lab API tabs example">

@@ -20,13 +20,13 @@ import { notifications } from "./data";
 import UserProfile from "./UserProfile";
 import SearchIcon from "@mui/icons-material/Search";
 import {TabPanel} from "@mui/lab";
-import logo from "@src/assets/images/logo-clarytas.png";
+import logo from "@src/assets/images/logo-clarytas-white.png";
 import {MdOutlineLogout, MdRestore} from "react-icons/md";
 import {Link} from "react-router-dom";
 
 const TopBarWrapper = styled("div")<WithSetting>(({ theme, settings }) => {
   return {
-    backgroundColor: theme.palette.background.paper,
+    backgroundImage: "linear-gradient(to right, #046380, #004e75, #003967, #002456, #050d42)",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
@@ -61,7 +61,7 @@ const Topbar = () => {
           <MaximizeScreen />
         </Box>
         <Link to={"/auth/login"}>
-          <Button variant="text" color="primary" startIcon={<MdOutlineLogout />}>
+          <Button sx={{color: "white"}} variant="text"  startIcon={<MdOutlineLogout />}>
             Logout
           </Button>
         </Link>
